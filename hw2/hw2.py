@@ -1,5 +1,7 @@
 import numpy, matplotlib, os.path
 import numpy as np
+import matplotlib.pyplot as plt
+import pdb
 ########################################
 # FUNCTIONS YOU WILL NEED TO MODIFY:
 #  - KNN.euclid
@@ -87,6 +89,10 @@ class KNN():
 		self.x_mean = train_X.mean(axis=0)
 		self.x_std = train_X.std(axis=0)
 		self.train_X_centered_scaled = (train_X-numpy.tile(self.x_mean,(train_X.shape[0],1)))/self.x_std
+		
+		self.x_bar = np.sum(self.train_X, axis = 0) / (self.train_X.shape[0])	# average of all training points
+		self.x_tilde = self.train_X - self.x_bar 										# normalized training data aka x_i - x_bar
+		self.variance = np.sum(np.square(self.x_tilde), axis=0) / (self.train_X.shape[0])
 
 	def euclid(self,x_q):
 		'''
@@ -146,20 +152,33 @@ class KNN():
 					data points
 		'''
 		# TODO: YOUR CODE HERE
-		x_bar = np.sum(self.train_X, axis = 0) / (self.train_X.shape[0]) # average of all training points
-		x_q_tilde = x_q - x_bar # remember to center and scale the query point
-		x_tilde = self.train_X - x_bar # normalized training data aka x_i - x_bar
-		variance = np.sum(np.square(x_tilde), axis=0) / (self.train_X.shape[0])
-		newVariance = variance
+		# x_bar = np.sum(self.train_X, axis = 0) / (self.train_X.shape[0])	# average of all training points
+		# x_q_tilde = x_q - x_bar 											# remember to center and scale the query point
+		# x_tilde = self.train_X - x_bar 										# normalized training data aka x_i - x_bar
+		# variance = np.sum(np.square(x_tilde), axis=0) / (self.train_X.shape[0])
+		# x_bar = self.x_mean
+		# x_q_tilde = x_q - x_bar
+		# x_tilde = self.train_X_centered_scaled
+		# variance = self.x_std ** 2
+
+		x_bar = self.x_bar
+		x_q_tilde = x_q - x_bar 											# remember to center and scale the query point
+		x_tilde = self.x_tilde
+		variance = self.variance
+		# newVariance = variance
 		# checks for variances equal to 0. if exists, remove that feature cuz they're all equal
+		remove = []
 		for i in range(len(variance)):
 			if variance[i] == 0:
-				x_tilde = np.delete(x_tilde, i, 1)
-				x_q_tilde = np.delete(x_q_tilde, i)
-				newVariance = np.delete(newVariance, i)
-		variance = newVariance
+				remove.append(i)
+		x_tilde = np.delete(x_tilde, remove, 1)
+		x_q_tilde = np.delete(x_q_tilde, remove)
+		variance = np.delete(variance, remove)
+		# variance = newVariance
+		if 0 in variance:
+			print('darn')
+		dists = np.sqrt(np.sum((np.square(x_tilde - x_q_tilde) / variance), axis = 1))
 		
-		dists = np.sqrt(np.sum(((x_tilde - x_q_tilde) / variance), axis = 1))
 		return dists
 	def query_single_pt(self,query_X,k,d):
 		'''
@@ -401,23 +420,7 @@ def multiclass_logistic_score(list_of_logreg, test_X, test_Y):
 	score = (Y_hat == test_Y).sum()/test_Y.shape[0]
 	return score
 
-def q1():
-	htru2_data = load_HTRU2()
-	htru2_KNN = KNN(htru2_data[0], htru2_data[1])
-	# for max_k in range(htru2_data[0].shape[0]):
-	for max_k in range(1,3):
-		kNN_euc_loss = htru2_KNN.train_loss(max_k,htru2_KNN.euclid)
-		kNN_man_loss = htru2_KNN.train_loss(max_k,htru2_KNN.manhattan)
-		kNN_mah_loss = htru2_KNN.train_loss(max_k,htru2_KNN.mahalanobis)
-		print("Training Set KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
-																									min(kNN_man_loss),numpy.argmin(kNN_man_loss)+1,
-																									min(kNN_mah_loss),numpy.argmin(kNN_mah_loss)+1))
-		kNN_euc_loss = htru2_KNN.test_loss(max_k,htru2_KNN.euclid,htru2_data[2],htru2_data[3])
-		kNN_man_loss = htru2_KNN.test_loss(max_k,htru2_KNN.manhattan,htru2_data[2],htru2_data[3])
-		kNN_mah_loss = htru2_KNN.test_loss(max_k,htru2_KNN.mahalanobis,htru2_data[2],htru2_data[3])
-		print("Testing Set KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
-																									min(kNN_man_loss),numpy.argmin(kNN_man_loss)+1,
-																									min(kNN_mah_loss),numpy.argmin(kNN_mah_loss)+1))
+
 
 def main():
 	print('pre-test')
@@ -437,11 +440,157 @@ def main():
 	print("LogReg score: {}".format(lr_score))
 	print('end test')
 
-	print('-------------q1-------------')
-	q1()
-	print('-------------q1 end-------------')
+	if True:
+		# run(load_test, "Test")
+		print('-------------HTRU2-------------')
+		# run(load_HTRU2, "HTRU2")
+		print('-------------HTRU2 end-------------')
+		print('-------------iris-------------')
+		# run(load_iris, "iris")
+		print('-------------iris end-------------')
+		print('-------------digits-------------')
+		run(load_digits, "digits")
+		print('-------------digits end-------------')
 
+	if False:
+		print('-------------q0-------------')
+		q0()
+		print('-------------q0 end-------------')
+	if False:
+		print('-------------q1-------------')
+		q1()
+		print('-------------q1 end-------------')
 
+def run(load, dataName):
+	test_data = load()
+	test_KNN = KNN(test_data[0],test_data[1])
+	training_euc = []
+	training_man = []
+	training_mah = []
+	testing_euc = []
+	testing_man = []
+	testing_mah = []
+	ks = []
+	for max_k in range(1, np.int(np.sqrt(test_data[0].shape[0]))):
+	# for max_k in range(1, 30):
+		ks.append(max_k)
+		kNN_euc_loss = test_KNN.train_loss(max_k,test_KNN.euclid)
+		kNN_man_loss = test_KNN.train_loss(max_k,test_KNN.manhattan)
+		kNN_mah_loss = test_KNN.train_loss(max_k,test_KNN.mahalanobis)
+		training_euc = kNN_euc_loss
+		training_man = kNN_man_loss
+		training_mah = kNN_mah_loss
+		print("{} KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(dataName, max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
+																									min(kNN_man_loss),numpy.argmin(kNN_man_loss)+1,
+																									min(kNN_mah_loss),numpy.argmin(kNN_mah_loss)+1))
+		kNN_euc_loss = test_KNN.test_loss(max_k,test_KNN.euclid,test_data[2],test_data[3])
+		kNN_man_loss = test_KNN.test_loss(max_k,test_KNN.manhattan,test_data[2],test_data[3])
+		kNN_mah_loss = test_KNN.test_loss(max_k,test_KNN.mahalanobis,test_data[2],test_data[3])
+		testing_euc = kNN_euc_loss
+		testing_man = kNN_man_loss
+		testing_mah = kNN_mah_loss
+		print("{} KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(dataName, max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
+																									min(kNN_man_loss),numpy.argmin(kNN_man_loss)+1,
+																									min(kNN_mah_loss),numpy.argmin(kNN_mah_loss)+1))
+	#
+	plt.plot(ks, training_euc, label='train')
+	plt.plot(ks, testing_euc, label='test')
+	plt.xlabel('k')
+	plt.ylabel('error/loss')
+	plt.legend()
+	plt.savefig("plots/{}_euc.png".format(dataName))
+	plt.clf()
+
+	plt.plot(ks, training_man, label='train')
+	plt.plot(ks, testing_man, label='test')
+	plt.xlabel('k')
+	plt.ylabel('error/loss')
+	plt.legend()
+	plt.savefig("plots/{}_man.png".format(dataName))
+	plt.clf()
+
+	plt.plot(ks, training_mah, label='train')
+	plt.plot(ks, testing_mah, label='test')
+	plt.xlabel('k')
+	plt.ylabel('error/loss')
+	plt.legend()
+	plt.savefig("plots/{}_mah.png".format(dataName))
+	plt.clf()
 
 if __name__ == '__main__':
 	main()
+
+
+def q1():
+	htru2_data = load_HTRU2()
+	htru2_KNN = KNN(htru2_data[0], htru2_data[1])
+	# for max_k in range(htru2_data[0].shape[0]):
+	for max_k in range(1,3):
+		kNN_euc_loss = htru2_KNN.train_loss(max_k,htru2_KNN.euclid)
+		kNN_man_loss = htru2_KNN.train_loss(max_k,htru2_KNN.manhattan)
+		kNN_mah_loss = htru2_KNN.train_loss(max_k,htru2_KNN.mahalanobis)
+		print("Training Set KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
+																									min(kNN_man_loss),numpy.argmin(kNN_man_loss)+1,
+																									min(kNN_mah_loss),numpy.argmin(kNN_mah_loss)+1))
+		kNN_euc_loss = htru2_KNN.test_loss(max_k,htru2_KNN.euclid,htru2_data[2],htru2_data[3])
+		kNN_man_loss = htru2_KNN.test_loss(max_k,htru2_KNN.manhattan,htru2_data[2],htru2_data[3])
+		kNN_mah_loss = htru2_KNN.test_loss(max_k,htru2_KNN.mahalanobis,htru2_data[2],htru2_data[3])
+		print("Testing Set KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
+																									min(kNN_man_loss),numpy.argmin(kNN_man_loss)+1,
+																									min(kNN_mah_loss),numpy.argmin(kNN_mah_loss)+1))
+
+def q0():
+	test_data = load_test()
+	test_KNN = KNN(test_data[0],test_data[1])
+	training_euc = []
+	training_man = []
+	training_mah = []
+	testing_euc = []
+	testing_man = []
+	testing_mah = []
+	ks = []
+	# for max_k in range(1, np.int(np.sqrt(test_data[0].shape[0]))):
+	for max_k in range(1, 30):
+		ks.append(max_k)
+		kNN_euc_loss = test_KNN.train_loss(max_k,test_KNN.euclid)
+		kNN_man_loss = test_KNN.train_loss(max_k,test_KNN.manhattan)
+		kNN_mah_loss = test_KNN.train_loss(max_k,test_KNN.mahalanobis)
+		training_euc = kNN_euc_loss
+		training_man = kNN_man_loss
+		training_mah = kNN_mah_loss
+		print("Training Set KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
+																									min(kNN_man_loss),numpy.argmin(kNN_man_loss)+1,
+																									min(kNN_mah_loss),numpy.argmin(kNN_mah_loss)+1))
+		kNN_euc_loss = test_KNN.test_loss(max_k,test_KNN.euclid,test_data[2],test_data[3])
+		kNN_man_loss = test_KNN.test_loss(max_k,test_KNN.manhattan,test_data[2],test_data[3])
+		kNN_mah_loss = test_KNN.test_loss(max_k,test_KNN.mahalanobis,test_data[2],test_data[3])
+		testing_euc = kNN_euc_loss
+		testing_man = kNN_man_loss
+		testing_mah = kNN_mah_loss
+		print("Testing Set KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
+																									min(kNN_man_loss),numpy.argmin(kNN_man_loss)+1,
+																									min(kNN_mah_loss),numpy.argmin(kNN_mah_loss)+1))
+	#
+	plt.plot(ks, training_euc, label='train')
+	plt.plot(ks, testing_euc, label='test')
+	plt.xlabel('k')
+	plt.ylabel('error/loss')
+	plt.legend()
+	plt.savefig('plots/test_euc.png')
+	plt.clf()
+
+	plt.plot(ks, training_man, label='train')
+	plt.plot(ks, testing_man, label='test')
+	plt.xlabel('k')
+	plt.ylabel('error/loss')
+	plt.legend()
+	plt.savefig('plots/test_man.png')
+	plt.clf()
+
+	plt.plot(ks, training_mah, label='train')
+	plt.plot(ks, testing_mah, label='test')
+	plt.xlabel('k')
+	plt.ylabel('error/loss')
+	plt.legend()
+	plt.savefig('plots/test_mah.png')
+	plt.clf()
