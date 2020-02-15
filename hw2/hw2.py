@@ -1,4 +1,5 @@
 import numpy, matplotlib, os.path
+import numpy as np
 ########################################
 # FUNCTIONS YOU WILL NEED TO MODIFY:
 #  - KNN.euclid
@@ -103,7 +104,10 @@ class KNN():
 					data points
 		'''
 		# TODO: YOUR CODE HERE
-		dists = numpy.zeros( (self.train_X.shape[0],1) )
+		diff = self.train_X - x_q # diff of coordinates
+		dists = numpy.square(diff) # square of diff of coordinates
+		dists = np.sqrt(np.sum(dists, axis=1)) # sqrt of sum of squares
+		dists = dists.reshape(self.train_X.shape[0], 1) # reshape
 		return dists
 	def manhattan(self,x_q):
 		'''
@@ -121,7 +125,10 @@ class KNN():
 					data points
 		'''
 		# TODO: YOUR CODE HERE
-		dists = numpy.zeros( (self.train_X.shape[0],1) )
+		diff = self.train_X - x_q # x_j - x_j'
+		dists = numpy.absolute(diff) # abs value of difference of each coordinate
+		dists = np.sum(dists, axis=1) # sums the abs value of differences of each coordinate
+		dists = dists.reshape(self.train_X.shape[0], 1) # reshapes from (N,) to (N,1)
 		return dists
 	def mahalanobis(self,x_q):
 		'''
@@ -139,8 +146,20 @@ class KNN():
 					data points
 		'''
 		# TODO: YOUR CODE HERE
-		x_q_tilde = x_q # remember to center and scale the query point
-		dists = numpy.zeros( (self.train_X.shape[0],1) )
+		x_bar = np.sum(self.train_X, axis = 0) / (self.train_X.shape[0]) # average of all training points
+		x_q_tilde = x_q - x_bar # remember to center and scale the query point
+		x_tilde = self.train_X - x_bar # normalized training data aka x_i - x_bar
+		variance = np.sum(np.square(x_tilde), axis=0) / (self.train_X.shape[0])
+		newVariance = variance
+		# checks for variances equal to 0. if exists, remove that feature cuz they're all equal
+		for i in range(len(variance)):
+			if variance[i] == 0:
+				x_tilde = np.delete(x_tilde, i, 1)
+				x_q_tilde = np.delete(x_q_tilde, i)
+				newVariance = np.delete(newVariance, i)
+		variance = newVariance
+		
+		dists = np.sqrt(np.sum(((x_tilde - x_q_tilde) / variance), axis = 1))
 		return dists
 	def query_single_pt(self,query_X,k,d):
 		'''
@@ -161,11 +180,19 @@ class KNN():
 		## Note: the argument d is a function pointer. You could pass in knn.euclid or
 		## knn.manhattan or knn.mahalanobis, or any other function you like, and here's
 		## how you might use it
-		distances = d(query_X)
+		distances = d(query_X).flatten()
 		# TODO: YOUR CODE HERE
-		label = None
-		return label
-		
+		i = np.argsort(distances, axis = 0) # gets the oder of the sort based on d
+		closest_Y = self.train_Y[i] # sorts class lables based on i
+		d = {}
+		# counts occurences of each class label
+		for n in range(k):
+			if closest_Y[n][0] in d:
+				d[closest_Y[n][0]] += 1
+			else:
+				d[closest_Y[n][0]] = 1
+		return max(d, key=d.get) # returns class label with most occurences
+
 	def query(self,data_X,k,d):
 		'''
 		A convenience method for calling query_single_pt on each point in a dataset, 
@@ -374,7 +401,26 @@ def multiclass_logistic_score(list_of_logreg, test_X, test_Y):
 	score = (Y_hat == test_Y).sum()/test_Y.shape[0]
 	return score
 
+def q1():
+	htru2_data = load_HTRU2()
+	htru2_KNN = KNN(htru2_data[0], htru2_data[1])
+	# for max_k in range(htru2_data[0].shape[0]):
+	for max_k in range(1,3):
+		kNN_euc_loss = htru2_KNN.train_loss(max_k,htru2_KNN.euclid)
+		kNN_man_loss = htru2_KNN.train_loss(max_k,htru2_KNN.manhattan)
+		kNN_mah_loss = htru2_KNN.train_loss(max_k,htru2_KNN.mahalanobis)
+		print("Training Set KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
+																									min(kNN_man_loss),numpy.argmin(kNN_man_loss)+1,
+																									min(kNN_mah_loss),numpy.argmin(kNN_mah_loss)+1))
+		kNN_euc_loss = htru2_KNN.test_loss(max_k,htru2_KNN.euclid,htru2_data[2],htru2_data[3])
+		kNN_man_loss = htru2_KNN.test_loss(max_k,htru2_KNN.manhattan,htru2_data[2],htru2_data[3])
+		kNN_mah_loss = htru2_KNN.test_loss(max_k,htru2_KNN.mahalanobis,htru2_data[2],htru2_data[3])
+		print("Testing Set KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
+																									min(kNN_man_loss),numpy.argmin(kNN_man_loss)+1,
+																									min(kNN_mah_loss),numpy.argmin(kNN_mah_loss)+1))
+
 def main():
+	print('pre-test')
 	test_data = load_test()
 	test_KNN = KNN(test_data[0],test_data[1])
 	kNN_euc_loss = test_KNN.test_loss(5,test_KNN.euclid,test_data[2],test_data[3])
@@ -389,6 +435,13 @@ def main():
 	#That is, a point is labeled as the positive class if it's probability under the hypothesis is >= 50%
 	lr_score = ((test_logreg.prob(test_data[2])>0.5) == (test_data[3]==1)).sum()/test_data[3].shape[0]
 	print("LogReg score: {}".format(lr_score))
+	print('end test')
+
+	print('-------------q1-------------')
+	q1()
+	print('-------------q1 end-------------')
+
+
 
 if __name__ == '__main__':
 	main()
