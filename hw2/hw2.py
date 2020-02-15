@@ -450,16 +450,16 @@ def main():
 		# run(load_HTRU2, "HTRU2")
 		# print("elapsed: {}".format(time.time() - start_time))
 		# print('-------------HTRU2 end-------------')
-		print('-------------iris-------------')
-		start_time = time.time()
-		run(load_iris, "iris")
-		print("elapsed: {}".format(time.time() - start_time))
-		print('-------------iris end-------------')
-		# print('-------------digits-------------')
+		# print('-------------iris-------------')
 		# start_time = time.time()
-		# run(load_digits, "digits")
+		# run(load_iris, "iris")
 		# print("elapsed: {}".format(time.time() - start_time))
-		# print('-------------digits end-------------')
+		# print('-------------iris end-------------')
+		print('-------------digits-------------')
+		start_time = time.time()
+		run(load_digits, "digits")
+		print("elapsed: {}".format(time.time() - start_time))
+		print('-------------digits end-------------')
 
 	if False:
 		print('-------------q0-------------')
@@ -483,7 +483,7 @@ def run(load, dataName):
 	# for max_k in range(1, np.int(np.sqrt(test_data[0].shape[0]))):
 	# for max_k in range(1, 30):
 	max_k = np.int(np.sqrt(test_data[0].shape[0]))
-	max_k = 120
+	max_k = 200
 	# ks.append(max_k)
 	ks = np.linspace(1, max_k, max_k)
 	kNN_euc_loss = test_KNN.train_loss(max_k,test_KNN.euclid)
@@ -518,7 +518,7 @@ def run(load, dataName):
 	plt.xlabel('k')
 	plt.ylabel('error/loss')
 	plt.legend()
-	plt.savefig("plots/{}_euc.png".format(dataName))
+	plt.savefig("writeup/plots/{}_euc.png".format(dataName))
 	plt.clf()
 
 	plt.plot(ks, training_man, label='train')
@@ -526,7 +526,7 @@ def run(load, dataName):
 	plt.xlabel('k')
 	plt.ylabel('error/loss')
 	plt.legend()
-	plt.savefig("plots/{}_man.png".format(dataName))
+	plt.savefig("writeup/plots/{}_man.png".format(dataName))
 	plt.clf()
 
 	plt.plot(ks, training_mah, label='train')
@@ -534,7 +534,7 @@ def run(load, dataName):
 	plt.xlabel('k')
 	plt.ylabel('error/loss')
 	plt.legend()
-	plt.savefig("plots/{}_mah.png".format(dataName))
+	plt.savefig("writeup/plots/{}_mah.png".format(dataName))
 	plt.clf()
 
 if __name__ == '__main__':
