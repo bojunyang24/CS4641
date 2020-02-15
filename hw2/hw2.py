@@ -441,12 +441,12 @@ def main():
 	print('end test')
 
 	if True:
-		# run(load_test, "Test")
+		run(load_test, "Test")
 		print('-------------HTRU2-------------')
-		# run(load_HTRU2, "HTRU2")
+		run(load_HTRU2, "HTRU2")
 		print('-------------HTRU2 end-------------')
 		print('-------------iris-------------')
-		# run(load_iris, "iris")
+		run(load_iris, "iris")
 		print('-------------iris end-------------')
 		print('-------------digits-------------')
 		run(load_digits, "digits")
@@ -480,7 +480,7 @@ def run(load, dataName):
 		training_euc = kNN_euc_loss
 		training_man = kNN_man_loss
 		training_mah = kNN_mah_loss
-		print("{} KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(dataName, max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
+		print("{} Training KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(dataName, max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
 																									min(kNN_man_loss),numpy.argmin(kNN_man_loss)+1,
 																									min(kNN_mah_loss),numpy.argmin(kNN_mah_loss)+1))
 		kNN_euc_loss = test_KNN.test_loss(max_k,test_KNN.euclid,test_data[2],test_data[3])
@@ -489,9 +489,16 @@ def run(load, dataName):
 		testing_euc = kNN_euc_loss
 		testing_man = kNN_man_loss
 		testing_mah = kNN_mah_loss
-		print("{} KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(dataName, max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
+		print("{} Testing KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(dataName, max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
 																									min(kNN_man_loss),numpy.argmin(kNN_man_loss)+1,
 																									min(kNN_mah_loss),numpy.argmin(kNN_mah_loss)+1))
+		#save arrays
+		np.savetxt("arrays/{}_training_euc.csv".format(dataName), training_euc, delimiter=',')
+		np.savetxt("arrays/{}_training_man.csv".format(dataName), training_man, delimiter=',')
+		np.savetxt("arrays/{}_training_mah.csv".format(dataName), training_mah, delimiter=',')
+		np.savetxt("arrays/{}_testing_euc.csv".format(dataName), testing_euc, delimiter=',')
+		np.savetxt("arrays/{}_testing_man.csv".format(dataName), testing_man, delimiter=',')
+		np.savetxt("arrays/{}_testing_mah.csv".format(dataName), testing_mah, delimiter=',')
 	#
 	plt.plot(ks, training_euc, label='train')
 	plt.plot(ks, testing_euc, label='test')
