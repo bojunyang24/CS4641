@@ -1,7 +1,7 @@
 import numpy, matplotlib, os.path
 import numpy as np
 import matplotlib.pyplot as plt
-import pdb
+import time
 ########################################
 # FUNCTIONS YOU WILL NEED TO MODIFY:
 #  - KNN.euclid
@@ -441,15 +441,23 @@ def main():
 	print('end test')
 
 	if True:
+		start_time = time.time()
 		run(load_test, "Test")
+		print("elapsed: {}".format(time.time() - start_time))
 		print('-------------HTRU2-------------')
+		start_time = time.time()
 		run(load_HTRU2, "HTRU2")
+		print("elapsed: {}".format(time.time() - start_time))
 		print('-------------HTRU2 end-------------')
 		print('-------------iris-------------')
+		start_time = time.time()
 		run(load_iris, "iris")
+		print("elapsed: {}".format(time.time() - start_time))
 		print('-------------iris end-------------')
 		print('-------------digits-------------')
+		start_time = time.time()
 		run(load_digits, "digits")
+		print("elapsed: {}".format(time.time() - start_time))
 		print('-------------digits end-------------')
 
 	if False:
@@ -471,35 +479,38 @@ def run(load, dataName):
 	testing_man = []
 	testing_mah = []
 	ks = []
-	for max_k in range(1, np.int(np.sqrt(test_data[0].shape[0]))):
+	# for max_k in range(1, np.int(np.sqrt(test_data[0].shape[0]))):
 	# for max_k in range(1, 30):
-		ks.append(max_k)
-		kNN_euc_loss = test_KNN.train_loss(max_k,test_KNN.euclid)
-		kNN_man_loss = test_KNN.train_loss(max_k,test_KNN.manhattan)
-		kNN_mah_loss = test_KNN.train_loss(max_k,test_KNN.mahalanobis)
-		training_euc = kNN_euc_loss
-		training_man = kNN_man_loss
-		training_mah = kNN_mah_loss
-		print("{} Training KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(dataName, max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
-																									min(kNN_man_loss),numpy.argmin(kNN_man_loss)+1,
-																									min(kNN_mah_loss),numpy.argmin(kNN_mah_loss)+1))
-		kNN_euc_loss = test_KNN.test_loss(max_k,test_KNN.euclid,test_data[2],test_data[3])
-		kNN_man_loss = test_KNN.test_loss(max_k,test_KNN.manhattan,test_data[2],test_data[3])
-		kNN_mah_loss = test_KNN.test_loss(max_k,test_KNN.mahalanobis,test_data[2],test_data[3])
-		testing_euc = kNN_euc_loss
-		testing_man = kNN_man_loss
-		testing_mah = kNN_mah_loss
-		print("{} Testing KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(dataName, max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
-																									min(kNN_man_loss),numpy.argmin(kNN_man_loss)+1,
-																									min(kNN_mah_loss),numpy.argmin(kNN_mah_loss)+1))
-		#save arrays
-		np.savetxt("arrays/{}_training_euc.csv".format(dataName), training_euc, delimiter=',')
-		np.savetxt("arrays/{}_training_man.csv".format(dataName), training_man, delimiter=',')
-		np.savetxt("arrays/{}_training_mah.csv".format(dataName), training_mah, delimiter=',')
-		np.savetxt("arrays/{}_testing_euc.csv".format(dataName), testing_euc, delimiter=',')
-		np.savetxt("arrays/{}_testing_man.csv".format(dataName), testing_man, delimiter=',')
-		np.savetxt("arrays/{}_testing_mah.csv".format(dataName), testing_mah, delimiter=',')
+	max_k = np.int(np.sqrt(test_data[0].shape[0]))
+	# ks.append(max_k)
+	ks = np.linspace(1, max_k, max_k)
+	kNN_euc_loss = test_KNN.train_loss(max_k,test_KNN.euclid)
+	kNN_man_loss = test_KNN.train_loss(max_k,test_KNN.manhattan)
+	kNN_mah_loss = test_KNN.train_loss(max_k,test_KNN.mahalanobis)
+	training_euc = kNN_euc_loss
+	training_man = kNN_man_loss
+	training_mah = kNN_mah_loss
+	print("{} Training KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(dataName, max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
+																								min(kNN_man_loss),numpy.argmin(kNN_man_loss)+1,
+																								min(kNN_mah_loss),numpy.argmin(kNN_mah_loss)+1))
+	kNN_euc_loss = test_KNN.test_loss(max_k,test_KNN.euclid,test_data[2],test_data[3])
+	kNN_man_loss = test_KNN.test_loss(max_k,test_KNN.manhattan,test_data[2],test_data[3])
+	kNN_mah_loss = test_KNN.test_loss(max_k,test_KNN.mahalanobis,test_data[2],test_data[3])
+	testing_euc = kNN_euc_loss
+	testing_man = kNN_man_loss
+	testing_mah = kNN_mah_loss
+	print("{} Testing KNN loss (max k = {}):\n\t Euclid:{},(k={})\n\t Manhattan:{},(k={})\n\t Mahalanobis:{},(k={})".format(dataName, max_k, min(kNN_euc_loss),numpy.argmin(kNN_euc_loss)+1,
+																								min(kNN_man_loss),numpy.argmin(kNN_man_loss)+1,
+																								min(kNN_mah_loss),numpy.argmin(kNN_mah_loss)+1))
+	#save arrays
+	np.savetxt("arrays/{}_training_euc.csv".format(dataName), training_euc, delimiter=',')
+	np.savetxt("arrays/{}_training_man.csv".format(dataName), training_man, delimiter=',')
+	np.savetxt("arrays/{}_training_mah.csv".format(dataName), training_mah, delimiter=',')
+	np.savetxt("arrays/{}_testing_euc.csv".format(dataName), testing_euc, delimiter=',')
+	np.savetxt("arrays/{}_testing_man.csv".format(dataName), testing_man, delimiter=',')
+	np.savetxt("arrays/{}_testing_mah.csv".format(dataName), testing_mah, delimiter=',')
 	#
+
 	plt.plot(ks, training_euc, label='train')
 	plt.plot(ks, testing_euc, label='test')
 	plt.xlabel('k')
