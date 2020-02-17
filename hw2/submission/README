@@ -1,0 +1,14 @@
+Bojun Yang
+
+To run KNNTests and LogRegTests, set these variables to True at the beginning of the main function.
+
+For KNNTests I call run(load,dataName) to run each dataset. Prints out dataset name, training and testing losses.
+I pass in the corresponding load dataset function to run each time.
+I used max_k to set the max k to run to for KNN. There's a few of these. The uncommented out one is the sqrt of the training set's length. I set the max_k manually for a few of the runs to get graphs that looked better.
+
+For LogRegTests I call LogReg(load,dataName,multiclass) to run each dataset. Prints out dataset name, scores. 
+I pass in the corresponding load dataset function to run each time.
+
+I saved my numpy arrays for KNN for some reason but it's commented out.
+I also save the matplotlib plots within run(...) for KNN. 
+There are comments next to my implementations of other functions to detail what I'm doing each line.

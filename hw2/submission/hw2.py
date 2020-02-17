@@ -526,11 +526,8 @@ def run(load, dataName):
 	testing_man = []
 	testing_mah = []
 	ks = []
-	# for max_k in range(1, np.int(np.sqrt(test_data[0].shape[0]))):
-	# for max_k in range(1, 30):
 	max_k = np.int(np.sqrt(test_data[0].shape[0]))
-	max_k = 50
-	# ks.append(max_k)
+	# max_k = 50
 	ks = np.linspace(1, max_k, max_k)
 	kNN_euc_loss = test_KNN.train_loss(max_k,test_KNN.euclid)
 	kNN_man_loss = test_KNN.train_loss(max_k,test_KNN.manhattan)

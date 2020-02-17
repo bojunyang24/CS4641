@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  15 FEB 2020 14:35
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  16 FEB 2020 21:44
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -267,37 +267,170 @@ Package grfext Info: Graphics extension search list:
  (/usr/local/texlive/2019/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-<plots/HTRU2_euc.png, id=1, 462.528pt x 346.896pt>
-File: plots/HTRU2_euc.png Graphic file (type png)
-<use plots/HTRU2_euc.png>
-Package pdftex.def Info: plots/HTRU2_euc.png  used on input line 44.
+<plots/final/HTRU2_euc.png, id=1, 462.528pt x 346.896pt>
+File: plots/final/HTRU2_euc.png Graphic file (type png)
+<use plots/final/HTRU2_euc.png>
+Package pdftex.def Info: plots/final/HTRU2_euc.png  used on input line 43.
 (pdftex.def)             Requested size: 330.8885pt x 248.16821pt.
-<plots/iris_euc.png, id=3, 462.528pt x 346.896pt>
-File: plots/iris_euc.png Graphic file (type png)
-<use plots/iris_euc.png>
-Package pdftex.def Info: plots/iris_euc.png  used on input line 46.
-(pdftex.def)             Requested size: 330.8885pt x 248.16821pt.
-<plots/digits_euc.png, id=4, 462.528pt x 346.896pt>
-File: plots/digits_euc.png Graphic file (type png)
-<use plots/digits_euc.png>
-Package pdftex.def Info: plots/digits_euc.png  used on input line 48.
+<plots/final/HTRU2_euc20.png, id=3, 462.528pt x 346.896pt>
+File: plots/final/HTRU2_euc20.png Graphic file (type png)
+<use plots/final/HTRU2_euc20.png>
+Package pdftex.def Info: plots/final/HTRU2_euc20.png  used on input line 44.
 (pdftex.def)             Requested size: 330.8885pt x 248.16821pt.
  [1
 
-{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map} </Users/bojunyang/school/CS4641/hw2/writeup/plots/HTRU2_euc.png> </Users/bojunyang/school/CS4641/hw2/writeup/plots/iris_euc.png>] [2 </Users/bojunyang/school/CS4641/hw2/writeup/plots/digits_euc.png>] (/Users/bojunyang/school/CS4641/hw2/writeup/hw2-answers.aux) ) 
+{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map} </Users/bojunyang/school/CS4641/hw2/writeup/plots/final/HTRU2_euc.png> </Users/bojunyang/school/CS4641/hw2/writeup/plots/final/HTRU2_euc20.png>]
+<plots/final/iris_euc.png, id=13, 462.528pt x 346.896pt>
+File: plots/final/iris_euc.png Graphic file (type png)
+<use plots/final/iris_euc.png>
+Package pdftex.def Info: plots/final/iris_euc.png  used on input line 51.
+(pdftex.def)             Requested size: 413.63885pt x 310.215pt.
+
+Overfull \hbox (21.08043pt too wide) in paragraph at lines 46--52
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 46--52
+
+ []
+
+[2 </Users/bojunyang/school/CS4641/hw2/writeup/plots/final/iris_euc.png>]
+<plots/final/digits_euc.png, id=18, 462.528pt x 346.896pt>
+File: plots/final/digits_euc.png Graphic file (type png)
+<use plots/final/digits_euc.png>
+Package pdftex.def Info: plots/final/digits_euc.png  used on input line 57.
+(pdftex.def)             Requested size: 330.8885pt x 248.16821pt.
+<plots/final/digits_euc50.png, id=19, 462.528pt x 346.896pt>
+File: plots/final/digits_euc50.png Graphic file (type png)
+<use plots/final/digits_euc50.png>
+Package pdftex.def Info: plots/final/digits_euc50.png  used on input line 58.
+(pdftex.def)             Requested size: 330.8885pt x 248.16821pt.
+ [3 </Users/bojunyang/school/CS4641/hw2/writeup/plots/final/digits_euc.png> </Users/bojunyang/school/CS4641/hw2/writeup/plots/final/digits_euc50.png>]
+<plots/final/HTRU2_man.png, id=25, 462.528pt x 346.896pt>
+File: plots/final/HTRU2_man.png Graphic file (type png)
+<use plots/final/HTRU2_man.png>
+Package pdftex.def Info: plots/final/HTRU2_man.png  used on input line 66.
+(pdftex.def)             Requested size: 330.8885pt x 248.16821pt.
+<plots/final/HTRU2_man20.png, id=26, 462.528pt x 346.896pt>
+File: plots/final/HTRU2_man20.png Graphic file (type png)
+<use plots/final/HTRU2_man20.png>
+Package pdftex.def Info: plots/final/HTRU2_man20.png  used on input line 67.
+(pdftex.def)             Requested size: 330.8885pt x 248.16821pt.
+ [4 </Users/bojunyang/school/CS4641/hw2/writeup/plots/final/HTRU2_man.png> </Users/bojunyang/school/CS4641/hw2/writeup/plots/final/HTRU2_man20.png>]
+<plots/final/iris_man.png, id=32, 462.528pt x 346.896pt>
+File: plots/final/iris_man.png Graphic file (type png)
+<use plots/final/iris_man.png>
+Package pdftex.def Info: plots/final/iris_man.png  used on input line 73.
+(pdftex.def)             Requested size: 413.63885pt x 310.215pt.
+
+Overfull \hbox (21.08043pt too wide) in paragraph at lines 69--74
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 69--74
+
+ []
+
+[5 </Users/bojunyang/school/CS4641/hw2/writeup/plots/final/iris_man.png>]
+<plots/final/digits_man.png, id=37, 462.528pt x 346.896pt>
+File: plots/final/digits_man.png Graphic file (type png)
+<use plots/final/digits_man.png>
+Package pdftex.def Info: plots/final/digits_man.png  used on input line 79.
+(pdftex.def)             Requested size: 330.8885pt x 248.16821pt.
+<plots/final/digits_man50.png, id=38, 462.528pt x 346.896pt>
+File: plots/final/digits_man50.png Graphic file (type png)
+<use plots/final/digits_man50.png>
+Package pdftex.def Info: plots/final/digits_man50.png  used on input line 80.
+(pdftex.def)             Requested size: 330.8885pt x 248.16821pt.
+ [6 </Users/bojunyang/school/CS4641/hw2/writeup/plots/final/digits_man.png> </Users/bojunyang/school/CS4641/hw2/writeup/plots/final/digits_man50.png>]
+<plots/final/HTRU2_mah.png, id=44, 462.528pt x 346.896pt>
+File: plots/final/HTRU2_mah.png Graphic file (type png)
+<use plots/final/HTRU2_mah.png>
+Package pdftex.def Info: plots/final/HTRU2_mah.png  used on input line 88.
+(pdftex.def)             Requested size: 330.8885pt x 248.16821pt.
+<plots/final/HTRU2_mah20.png, id=45, 462.528pt x 346.896pt>
+File: plots/final/HTRU2_mah20.png Graphic file (type png)
+<use plots/final/HTRU2_mah20.png>
+Package pdftex.def Info: plots/final/HTRU2_mah20.png  used on input line 89.
+(pdftex.def)             Requested size: 330.8885pt x 248.16821pt.
+ [7 </Users/bojunyang/school/CS4641/hw2/writeup/plots/final/HTRU2_mah.png> </Users/bojunyang/school/CS4641/hw2/writeup/plots/final/HTRU2_mah20.png>]
+<plots/final/iris_mah.png, id=52, 462.528pt x 346.896pt>
+File: plots/final/iris_mah.png Graphic file (type png)
+<use plots/final/iris_mah.png>
+Package pdftex.def Info: plots/final/iris_mah.png  used on input line 95.
+(pdftex.def)             Requested size: 413.63885pt x 310.215pt.
+
+Overfull \hbox (21.08043pt too wide) in paragraph at lines 91--96
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 91--96
+
+ []
+
+[8 </Users/bojunyang/school/CS4641/hw2/writeup/plots/final/iris_mah.png>]
+<plots/final/digits_mah.png, id=57, 462.528pt x 346.896pt>
+File: plots/final/digits_mah.png Graphic file (type png)
+<use plots/final/digits_mah.png>
+Package pdftex.def Info: plots/final/digits_mah.png  used on input line 101.
+(pdftex.def)             Requested size: 330.8885pt x 248.16821pt.
+<plots/final/digits_mah50.png, id=58, 462.528pt x 346.896pt>
+File: plots/final/digits_mah50.png Graphic file (type png)
+<use plots/final/digits_mah50.png>
+Package pdftex.def Info: plots/final/digits_mah50.png  used on input line 102.
+(pdftex.def)             Requested size: 330.8885pt x 248.16821pt.
+ [9 </Users/bojunyang/school/CS4641/hw2/writeup/plots/final/digits_mah.png> </Users/bojunyang/school/CS4641/hw2/writeup/plots/final/digits_mah50.png>]
+Overfull \hbox (39.07162pt too wide) in paragraph at lines 113--121
+\OT1/cmr/m/n/12 iris Lo-gReg Test score: 0.9666666666666667, iris Lo-gReg Train score: 0.9666666666666667 
+ []
+
+
+Overfull \hbox (63.87692pt too wide) in paragraph at lines 121--135
+\OT1/cmr/m/n/12 digits Lo-gReg Test score: 0.9365609348914858, dig-its Lo-gReg Train score: 0.9641642688987706 
+ []
+
+[10]
+Overfull \hbox (15.91936pt too wide) in paragraph at lines 151--165
+\OML/cmm/m/it/12 ^^^\OT1/cmr/m/n/12 (\OT1/cmr/bx/n/12 x\OT1/cmr/m/n/12 )[]\OT1/cmr/bx/n/12 w$ \OT1/cmr/m/n/12 = $\OML/cmm/m/it/12 ^^^\OT1/cmr/m/n/12 (\OT1/cmr/bx/n/12 x\OT1/cmr/m/n/12 )[]^^F[]\OML/cmm/m/it/12 []y[]^^^\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 x[]\OT1/cmr/m/n/12 ) = ^^F[]\OML/cmm/m/it/12 []y[]^^^\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 x[]\OT1/cmr/m/n/12 )\OML/cmm/m/it/12 ^^^\OT1/cmr/m/n/12 (\OT1/cmr/bx/n/12 x\OT1/cmr/m/n/12 )[] = ^^F[]\OML/cmm/m/it/12 []y[]K\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 x[]; x\OT1/cmr/m/n/12 )$ 
+ []
+
+
+Package amsmath Warning: Foreign command \atopwithdelims;
+(amsmath)                \frac or \genfrac should be used instead
+(amsmath)                 on input line 170.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 167--178
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 167--178
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 179--183
+
+ []
+
+[11] [12] (/Users/bojunyang/school/CS4641/hw2/writeup/hw2-answers.aux) ) 
 Here is how much of TeX's memory you used:
- 5384 strings out of 492616
- 80764 string characters out of 6129482
- 156995 words of memory out of 5000000
- 9252 multiletter control sequences out of 15000+600000
- 4245 words of font info for 16 fonts, out of 8000000 for 9000
+ 5469 strings out of 492616
+ 82748 string characters out of 6129482
+ 164080 words of memory out of 5000000
+ 9314 multiletter control sequences out of 15000+600000
+ 7978 words of font info for 29 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,5n,40p,391b,339s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb>
-Output written on /Users/bojunyang/school/CS4641/hw2/writeup/hw2-answers.pdf (2 pages, 90015 bytes).
+ 42i,5n,40p,391b,445s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
+Output written on /Users/bojunyang/school/CS4641/hw2/writeup/hw2-answers.pdf (12 pages, 463165 bytes).
 PDF statistics:
- 26 PDF objects out of 1000 (max. 8388607)
- 13 compressed objects within 1 object stream
+ 118 PDF objects out of 1000 (max. 8388607)
+ 62 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 16 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 76 words of extra memory for PDF output out of 10000 (max. 10000000)
 
