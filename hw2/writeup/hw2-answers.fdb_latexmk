@@ -1,7 +1,7 @@
 # Fdb version 3
-["pdflatex"] 1581907496 "/Users/bojunyang/school/CS4641/hw2/writeup/hw2-answers.tex" "/Users/bojunyang/school/CS4641/hw2/writeup/hw2-answers.pdf" "hw2-answers" 1581907497
+["pdflatex"] 1581907496 "/Users/bojunyang/school/CS4641/hw2/writeup/hw2-answers.tex" "/Users/bojunyang/school/CS4641/hw2/writeup/hw2-answers.pdf" "hw2-answers" 1583610288
   "/Users/bojunyang/school/CS4641/hw2/writeup/hw2-answers.aux" 1581907497 45 9108cb1e5d0715b696fc51716bdec3e1 ""
-  "/Users/bojunyang/school/CS4641/hw2/writeup/hw2-answers.tex" 1581907494 11456 090a01938d7ac1ef8031d04bb38323a5 ""
+  "/Users/bojunyang/school/CS4641/hw2/writeup/hw2-answers.tex" 1583610286 11456 090a01938d7ac1ef8031d04bb38323a5 ""
   "/usr/local/texlive/2019/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/local/texlive/2019/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2019/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -74,7 +74,7 @@
   "/usr/local/texlive/2019/texmf-var/web2c/pdftex/pdflatex.fmt" 1557342086 4259635 562fc36ec496993777a6c428d8bfb811 ""
   "/usr/local/texlive/2019/texmf.cnf" 1557341546 577 d150fef99ac436ad1156e86b0892f6ef ""
   "hw2-answers.aux" 1581907497 45 9108cb1e5d0715b696fc51716bdec3e1 "pdflatex"
-  "hw2-answers.tex" 1581907494 11456 090a01938d7ac1ef8031d04bb38323a5 ""
+  "hw2-answers.tex" 1583610286 11456 090a01938d7ac1ef8031d04bb38323a5 ""
   "plots/final/HTRU2_euc.png" 1581779766 30975 84f8d7c3673b9efff008f53c0b3469ca ""
   "plots/final/HTRU2_euc20.png" 1581787724 29649 8e623c20845e1fc0e1bce83dcba4997e ""
   "plots/final/HTRU2_mah.png" 1581779767 31395 f92618207a38231fe17b4bdcdda6512d ""
@@ -91,8 +91,8 @@
   "plots/final/iris_mah.png" 1581789595 29870 2188fb04a0a137052510c453ade60d39 ""
   "plots/final/iris_man.png" 1581789595 27478 f781c28c1848ce8967eb295ae17ecd3e ""
   (generated)
-  "/Users/bojunyang/school/CS4641/hw2/writeup/hw2-answers.log"
   "hw2-answers.log"
-  "/Users/bojunyang/school/CS4641/hw2/writeup/hw2-answers.pdf"
-  "hw2-answers.aux"
   "hw2-answers.pdf"
+  "hw2-answers.aux"
+  "/Users/bojunyang/school/CS4641/hw2/writeup/hw2-answers.pdf"
+  "/Users/bojunyang/school/CS4641/hw2/writeup/hw2-answers.log"

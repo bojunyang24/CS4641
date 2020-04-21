@@ -1,0 +1,8 @@
+I used scikit-learn to test LogReg for PCA transformed data. All my code is there to see.
+
+To run my code:
+- set test = True for test dataset
+- set pca_test = True to run PCA for all datasets. Also prints out how much time it takes to train LogReg on each transformed data set.
+- set kmeans_test = True to run k-Means for all datasets.
+
+My code to save plots is commented out. I save all my plots to "results/plots/"
