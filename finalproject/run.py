@@ -102,8 +102,12 @@ def plot_3D_proj(data=None,labels=None):
     # return fig
 
 def gridsearch(classifier, params, x_train, y_train):
-    clf = GridSearchCV(classifier, params)
+    clf = GridSearchCV(classifier, params, n_jobs=-1, cv=50)
     return clf.fit(x_train, y_train)
+
+def non_linear_svm(data, center=True):
+    x_train, x_test, y_train, y_test = preprocess_data(data)
+
 
 def rfc(data, center=True):
     '''
