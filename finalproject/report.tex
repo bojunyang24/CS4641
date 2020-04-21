@@ -1,0 +1,91 @@
+\documentclass[12pt]{article}
+\oddsidemargin -0.5in
+\evensidemargin -0.5in
+\textwidth 7.2in
+\topmargin -0.5in
+\textheight 8in
+\flushbottom
+
+\usepackage[authoryear,round]{natbib} %a package for formatting citations
+\usepackage{amsmath} %a package for good looking equations and symbols
+\usepackage{algorithm2e} %a package for typesetting algorithms
+% \usepackage{caption} %a package for more complex captions for figures/tables/images
+\usepackage{subcaption} %extension of the caption package
+\usepackage{url} %embedded, clickable links
+\usepackage{fullpage} %including this package changes the default margins to use more of the page
+\usepackage{graphicx} %package for inline images
+\usepackage[usenames]{xcolor} %for adding color text
+\usepackage{enumitem} %for nested numbered lists (like in the questions section)
+\usepackage{hyperref}
+\setlist[description]{style=nextline}
+
+% \usepackage{hyperref}
+% \usepackage{amsfonts}
+
+\newcommand{\nextproblem}{
+	\vfill
+	\pagebreak
+}
+\setlist[itemize]{noitemsep, topsep=1pt}
+\graphicspath{{plots/}}
+
+\title{CS 4641 Machine Learning \\ Name Redacted | Section B Final Report}
+\date{}
+\author{}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction to Dataset}
+\subsection{\href{https://www.kaggle.com/insiyeah/musicfeatures}{Music Features from Kaggle} ($\leftarrow$ link)}
+Every year I look forward to Spotify's end of year wrap up. As a consumer of sounds, I love seeing which "conventional categories," AKA genres, of music I sink thousands of hours in. This past year a new one made itself to the top of my list: Cpop. After some research, that stands for Chinese Pop. I've literally never heard of songs being labeled in this kind of genre before which led me to wonder how can someone categorize all the various kinds of music in the world. 
+\\ \\
+\textbf{TODO: Feature description.}
+When I found this dataset, I was already interested in seeing if machine learning could analyze the sound waves of a piece of music and determine it's genre. However, that seems a too big of a computational task so I decided to use the features that are provided by this dataset. This dataset contains \textbf{1,000 datapoints} with \textbf{30 features per datapoint}. To prove that the features describe a piece pretty well, here are some of the features:
+\begin{itemize}
+    \item tempo: speed at which a passage of music is played
+    \item beats: basic unit of time. Think about it as the rhythm you would tap your foot to when listening to a piece
+    \item chroma\_stft: The Short Time Fourier Transform can be used to determine the sinusoidal frequency and phase content of local sections of a signal as it changes overtime (kind of like those visualizers that jump up and down)
+    \item 20 mel-frequency ceptral coefficients that make up a mel-frequency cepstrum: representation of the short term power spectrum of a sound
+\end{itemize}
+
+\subsection{Supervised Learning Problem}
+The underlying supervised learning problem is to \textbf{classify the genre} of pieces of music using the features of it's waveform. This dataset is \textbf{not trivial}. At first glance, there is no feature that determines the genre of a song trivially. To prove the non-triviality of this dataset, I tried to fit the centered data using sklearn.svm.LinearSVC (with a one-vs-the-rest multiclass scheme) 100 times and averaged the results.
+\begin{itemize}
+    \item avg training accuracy: 0.62
+    \item avg testing accuracy: 0.71
+\end{itemize}
+The training accuracy is not high enough to prove that the dataset is linearly separable. But to further research the triviality of the dataset, I did a few more experiements:
+\begin{itemize}
+    \item 3D PCA Plot
+    \\ \includegraphics[width=0.45\textwidth]{pca0} \includegraphics[width=0.45\textwidth]{pca1}
+    \\ The graph on the right is a zoomed in version of the left graph. It is clear that there are many data points mixed together and the dataset is at least not linearly separable in 3 dimensions.
+    \item Linear Regression: I one-hot-encoded the labels and tried to fit a linear regression. The testing and training accuracy was 0.26 and 0.31 respectively. This serves as more evidence that the dataset is non-trivial.
+\end{itemize}
+After these additional experiements, I have convinced myself that my \textbf{dataset is non-trivial}.
+
+\subsection{Performance Metrics}
+I will be using \textbf{K-Folds Cross Validation} for hyperparameter tuning. In K-Folds Cross Validation, I will split the data into a training and testing set. Then I will split the training data into k subsets and use k-1 subsets to train and leave the last subset as validation. I'll be using sklearn's GridSearchCV to accomplish this. \\
+I also plan on analyzing the \textbf{confusion matrix} of resulting test accuracies for each learning method and using \textbf{confidence intervals} as a means of comparing learning methods.
+
+\section{Description of Algorithms}
+\subsection{Random Forests with Bagging}
+A random forest consists of a large number of individual decision trees that form an ensemble. An ensemble bascially uses multiple algorithms to obtain more accurate predictions than any one individual of the ensemble. In a random forest, the ensemble is made up of relatively uncorrelated decision trees. Bagging (Bootstrap Aggregation) is a method that allows each decision tree in the random forest to randomly sample the dataset with replacement. Since decision trees are very sensitive the training data, this greatly increases the variablility of the decision trees. Here are the hyperparameters:
+\begin{itemize}
+    \item n\_estimators: int. Number of trees in the forest. Affects the size of the random forest.
+    \item max\_depth: int. The maximum depth of each decision tree. affects the complexity of each tree.
+    \item max\_features: int or [sqrt(n\_features), log2(n\_features), n\_features]. The max size of the random subsets of features to consider when splitting a node.
+\end{itemize}
+
+\subsection{Support Vector Machines with a non-linear kernel}
+SVMs attempts to separate datapoints by its labels by finding the best hyperplane using the large margin principle. For non-linear data, it can use the kernel trick to map the data to a higher dimension in hopes of finding a more suitable hyperplane. However, SVMs are inherently binary classifiers so it is not suitable for my dataset that has 10 unique labels. I will be using the \textbf{one-versus-all} classification technique to train my multiclass SVM. Here are the hyperparameters:
+\begin{itemize}
+    \item C: int. Regularization paramenter represents how much I want to avoid misclassifying each training example. Large C will choose the a plane that correctly classifies the most training examples. Small C will choose a plane with a larger margin even if that plane wrongly classifies more training examples
+    \item kernel: ['poly', 'rbf', 'sigmoid'] The kernel type to use when mapping the data to a new dimension space
+    \item gamma: float. Kernel coefficient for rbf, poly, and sigmoid. 
+    \item degree: int. Degree of polynomial kernel function. only for 'poly'
+\end{itemize}
+
+\end{document}
+

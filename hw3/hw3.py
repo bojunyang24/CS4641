@@ -374,13 +374,13 @@ def main():
 		# km.plot_3D_clusterd(data[0],labels)
 		print(km.normalized_mutual_information(data[0],data[1]))
 
-	pca_test = False
+	pca_test = True
 	if pca_test:
-		print('################ PCA Tests ################')
-		print('-------------HTRU2-------------')
-		start_time = time.time()
-		test_PCA(load_HTRU2, "HTRU2", 2)
-		print("total elapsed: {}".format(time.time() - start_time))
+		# print('################ PCA Tests ################')
+		# print('-------------HTRU2-------------')
+		# start_time = time.time()
+		# test_PCA(load_HTRU2, "HTRU2", 2)
+		# print("total elapsed: {}".format(time.time() - start_time))
 
 		print('-------------iris-------------')
 		start_time = time.time()
