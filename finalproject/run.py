@@ -257,13 +257,13 @@ def neuralnet2(data, center=True):
         'learning_rate_init': learning_rate_init,
         'max_iter': max_iter,
     }
-    grid = gridsearch(MLPClassifier(), params, x_train, y_train, name="MLP0_")
+    grid = gridsearch(MLPClassifier(), params, x_train, y_train, name="MLP_atl_0")
     saveprint("Best Param 1: {}".format(grid.best_params_), outfile)
     res = grid.cv_results_
     clf = grid.best_estimator_
     scores = cross_val_score(clf, x_test, y_test, cv=10)
 
-    grid = gridsearch(MLPClassifier(), params, x_train, y_train, name="MLP1_")
+    grid = gridsearch(MLPClassifier(), params, x_train, y_train, name="MLP_fin_1")
     saveprint("Best Param 2: {}".format(grid.best_params_), outfile)
     res = grid.cv_results_
     clf = grid.best_estimator_
