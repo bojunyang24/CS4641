@@ -154,8 +154,8 @@ def rfc(data, center=True):
     Saves the grid results to a pickle
     '''
     x_train, x_test, y_train, y_test = preprocess_data(data)
-    n_estimators = [int(x) for x in np.linspace(start = 100, stop = 1000, num = 10)]
-    max_depth = [int(x) for x in np.linspace(start = 10, stop = 1000, num = 10)]
+    n_estimators = [int(x) for x in np.linspace(start = 100, stop = 500, num = 5)]
+    max_depth = [int(x) for x in np.linspace(start = 100, stop = 500, num = 5)]
     max_features = ['sqrt','log2', None]
     params = {
         'n_estimators': n_estimators,
