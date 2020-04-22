@@ -53,8 +53,8 @@ When I found this dataset, I was already interested in seeing if machine learnin
 \subsection{Supervised Learning Problem}
 The underlying supervised learning problem is to \textbf{classify the genre} of pieces of music using the features of it's waveform. This dataset is \textbf{not trivial}. At first glance, there is no feature that determines the genre of a song trivially. To prove the non-triviality of this dataset, I tried to fit the centered data using sklearn.svm.LinearSVC (with a one-vs-the-rest multiclass scheme) 100 times and averaged the results.
 \begin{itemize}
-    \item avg training accuracy: 0.62
-    \item avg testing accuracy: 0.71
+    \item avg testing accuracy: 0.62
+    \item avg training accuracy: 0.71
 \end{itemize}
 The training accuracy is not high enough to prove that the dataset is linearly separable. But to further research the triviality of the dataset, I did a few more experiements:
 \begin{itemize}
