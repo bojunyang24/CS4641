@@ -178,8 +178,8 @@ def rfc(data, center=True):
 
 data = pd.read_csv('data/data.csv')
 
-# rfc(data)
-non_linear_svm(data)
+rfc(data)
+# non_linear_svm(data)
 
 # PCA_analysis(data)
 
