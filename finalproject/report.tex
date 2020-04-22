@@ -95,13 +95,27 @@ SVMs attempts to separate datapoints by its labels by finding the best hyperplan
     \item C: [1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03, 1.e+04]
     \\ Regularization paramenter represents how much I want to avoid misclassifying each training example. Large C will choose the a plane that correctly classifies the most training examples. Small C will choose a plane with a larger margin even if that plane wrongly classifies more training examples
     \item kernel: ['poly', 'rbf', 'sigmoid'] 
-    \\ The kernel type to use when mapping the data to a new dimension space
+    \\ The kernel type to use when mapping the data to a new dimension space. This will affect the separablility of the data after it is mapped to a new dimension.
     \item gamma: [1.e-03, 1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03]
     \\ Kernel coefficient for rbf, poly, and sigmoid.
 \end{itemize}
 
 \subsection{Neural Network}
-
+A neural net is basically a bunch of algorithms, designed and modeled loosely like a human brain, that can \textbf{recognize patterns}. They all start with an input layer, which can be thought of an array of inputs such as numbers, rgb values, words, etc. The input layer is \textbf{densely connected} to the first hidden layer and the first hidden layer to the next hidden layer. There can be many hidden layers and each layer is made up of some amount of neurons. Each neuron's job is to compute a \textbf{weighted average} of its input, and this sum is passed through a non-linear activation function such as a sigmoid or ReLU. Eventually the last hidden layer will connect to an output layer responsible for outputting the prediction. The entire neural net is trained using a technique called \textbf{back propagation}, which calculates a gradient descent to nudge the weights for a perceptron towards its theoretical optimal value. Here are the hyperparameters I will optimize for my nerual net:
+\begin{itemize}
+    \item hidden\_layer\_sizes: [ (10, 10, 10), (20, 20, 20), (10, 10), (20, 20) ]
+    \\ A tuple of length (number of layers - 2) where the element at position i represents the number of neurons in hidden layer i.
+    \item activation: ['identity', 'logistic', 'tanh', 'relu']
+    \\ The activation function for the hidden layer.
+    \item solver: ['lbfgs', 'sgd', 'adam']
+    \\ The solver for weight optimization for each neuron
+    \item apha: [0.0001, 0.001]
+    \\ The L2 regularization penalty parameter. This penalizes larger weight values to favor smaller values in the weight matrix. This in turn decreases the effect of the activation function, resulting in a less complex function. We want a less complex function to avoid overfitting
+    \item learning\_rate\_init: [0.01, 0.001]
+    \\ For my purposes, this will be the learning rate for the entirety of the training because I will be using a constant learning rate for all trials to limit the complexity of this GridSearch.
+    \item max\_iter: [500, 1000]
+    \\ The limit on the number of iterations of training. The solver iterates until convergence or when it has reach the max number of iterations.
+\end{itemize}
 
 \nextproblem
 

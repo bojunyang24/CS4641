@@ -13,6 +13,7 @@ from sklearn.multiclass import OneVsRestClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
+from sklearn.neural_network import MLPClassifier
 import pickle
 import time
 
@@ -169,16 +170,42 @@ def rfc(data, center=True):
         'max_depth': max_depth,
         'max_features': max_features,
     }
-    grid = gridsearch(RandomForestClassifier(), params, x_train, y_train, name="RandomForest_0")
+    grid = gridsearch(RandomForestClassifier(), params, x_train, y_train, name="RandomForest0_")
     res = grid.cv_results_
     clf = grid.best_estimator_
     scores = cross_val_score(clf, x_test, y_test, cv=10)
 
-    grid = gridsearch(RandomForestClassifier(), params, x_train, y_train, name="RandomForest_1")
+    grid = gridsearch(RandomForestClassifier(), params, x_train, y_train, name="RandomForest1_")
     res = grid.cv_results_
     clf = grid.best_estimator_
     scores = np.concatenate((scores, cross_val_score(clf, x_train, y_train, cv=10)))
     
+    get_ci(scores)
+
+def neuralnet(data, center=True):
+    x_train, x_test, y_train, y_test = preprocess_data(data)
+    hidden_layer_sizes = [(10,10,10),(20,20,20),(10,10),(20,20)]
+    activation =  ['logistic', 'relu']
+    alpha = [0.0001, 0.001]
+    learning_rate_init = [0.01, 0.001]
+    max_iter = [500, 1000]
+    params = {
+        'hidden_layer_sizes': hidden_layer_sizes,
+        'activation': activation,
+        'alpha': alpha,
+        'learning_rate_init': learning_rate_init,
+        'max_iter': max_iter,
+    }
+    grid = gridsearch(MLPClassifier(), params, x_train, y_train, name="MLP0_")
+    res = grid.cv_results_
+    clf = grid.best_estimator_
+    scores = cross_val_score(clf, x_test, y_test, cv=10)
+
+    grid = gridsearch(RandomForestClassifier(), params, x_train, y_train, name="MLP1_")
+    res = grid.cv_results_
+    clf = grid.best_estimator_
+    scores = np.concatenate((scores, cross_val_score(clf, x_train, y_train, cv=10)))
+
     get_ci(scores)
 
 def get_ci(scores):
@@ -196,7 +223,8 @@ def get_ci(scores):
 data = pd.read_csv('data/data.csv')
 
 # rfc(data)
-non_linear_svm(data)
+# non_linear_svm(data)
+
 
 # PCA_analysis(data)
 
