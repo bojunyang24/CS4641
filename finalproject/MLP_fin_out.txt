@@ -1,0 +1,2 @@
+GridSearchCV elapsed time: 46.8776650428772
+GridSearchCV elapsed time: 49.608811140060425
