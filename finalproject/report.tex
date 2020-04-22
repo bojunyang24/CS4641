@@ -81,9 +81,9 @@ I also plan on analyzing the \textbf{confusion matrix} of resulting test accurac
 \subsection{Random Forests with Bagging}
 A random forest consists of a large number of individual decision trees that form an ensemble. An ensemble bascially uses multiple algorithms to obtain more accurate predictions than any one individual of the ensemble. In a random forest, the ensemble is made up of relatively uncorrelated decision trees. Bagging (Bootstrap Aggregation) is a method that allows each decision tree in the random forest to randomly sample the dataset with replacement. Since decision trees are very sensitive the training data, this greatly increases the variablility of the decision trees. Here are the hyperparameters I will optimize:
 \begin{itemize}
-    \item n\_estimators: [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    \item n\_estimators: [100, 200, 300, 400, 500]
     \\ Number of trees in the forest. Affects the size of the random forest.
-    \item max\_depth: [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    \item max\_depth: [100, 200, 300, 400, 500]
     \\ The maximum depth of each decision tree. affects the complexity of each tree.
     \item max\_features: ['sqrt', 'log2', None]
     \\ The max size of the random subsets of features to consider when splitting a node.

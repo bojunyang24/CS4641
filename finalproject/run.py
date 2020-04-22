@@ -138,7 +138,7 @@ def non_linear_svm(data, center=True):
     }
     grid = gridsearch(SVC(), params, x_train, y_train, name="NonLinearSVC0_")
     res = grid.cv_results_
-    clf = grid.best_estimator_
+    clf = OneVsRestClassifier(grid.best_estimator_)
     scores = cross_val_score(clf, x_test, y_test, cv=10)
 
     # 9 degrees of freedome 95% two tailed CI
@@ -150,7 +150,7 @@ def non_linear_svm(data, center=True):
 
     grid = gridsearch(SVC(), params, x_test, y_test, name="NonLinearSVC1_")
     res = grid.cv_results_
-    clf = grid.best_estimator_
+    clf = OneVsRestClassifier(grid.best_estimator_)
     scores = np.concatenate((scores, cross_val_score(clf, x_train, y_train, cv=10)))
 
     get_ci(scores)
@@ -195,8 +195,8 @@ def get_ci(scores):
 
 data = pd.read_csv('data/data.csv')
 
-rfc(data)
-# non_linear_svm(data)
+# rfc(data)
+non_linear_svm(data)
 
 # PCA_analysis(data)
 

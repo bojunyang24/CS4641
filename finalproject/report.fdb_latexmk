@@ -1,7 +1,7 @@
 # Fdb version 3
-["pdflatex"] 1587533040 "/Users/bojunyang/school/CS4641/finalproject/report.tex" "/Users/bojunyang/school/CS4641/finalproject/report.pdf" "report" 1587533147
-  "/Users/bojunyang/school/CS4641/finalproject/report.aux" 1587533041 1821 44b4516fe903c8285df107ce0b8ca4ef ""
-  "/Users/bojunyang/school/CS4641/finalproject/report.tex" 1587533146 8276 b03d20850e00a173f0f79f7d2bd255dc ""
+["pdflatex"] 1587534494 "/Users/bojunyang/school/CS4641/finalproject/report.tex" "/Users/bojunyang/school/CS4641/finalproject/report.pdf" "report" 1587534495
+  "/Users/bojunyang/school/CS4641/finalproject/report.aux" 1587534495 1821 44b4516fe903c8285df107ce0b8ca4ef ""
+  "/Users/bojunyang/school/CS4641/finalproject/report.tex" 1587534493 8224 cf84787b76a4e3d9e8cfaece811d02af ""
   "/usr/local/texlive/2019/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/local/texlive/2019/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2019/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
@@ -64,13 +64,13 @@
   "/usr/local/texlive/2019/texmf.cnf" 1557341546 577 d150fef99ac436ad1156e86b0892f6ef ""
   "plots/pca0.png" 1587445046 328402 8addfcb8e243b3453c9c5151d0f84635 ""
   "plots/pca1.png" 1587445059 453291 e90af42d8c234b1061dc1ea4e7e5079c ""
-  "report.aux" 1587533041 1821 44b4516fe903c8285df107ce0b8ca4ef "pdflatex"
-  "report.out" 1587533041 583 64ee3fdb2f6c324f0161cf3b79b3f364 "pdflatex"
-  "report.tex" 1587533146 8276 b03d20850e00a173f0f79f7d2bd255dc ""
+  "report.aux" 1587534495 1821 44b4516fe903c8285df107ce0b8ca4ef "pdflatex"
+  "report.out" 1587534495 583 64ee3fdb2f6c324f0161cf3b79b3f364 "pdflatex"
+  "report.tex" 1587534493 8224 cf84787b76a4e3d9e8cfaece811d02af ""
   (generated)
-  "report.aux"
   "/Users/bojunyang/school/CS4641/finalproject/report.log"
   "report.out"
   "/Users/bojunyang/school/CS4641/finalproject/report.pdf"
-  "report.log"
+  "report.aux"
   "report.pdf"
+  "report.log"
