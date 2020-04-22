@@ -101,7 +101,7 @@ def plot_3D_proj(data=None,labels=None):
     matplotlib.pyplot.show()
     # return fig
 
-def gridsearch(classifier, params, x_train, y_train, x_test, y_test, name="Test_"):
+def gridsearch(classifier, params, x_train, x_test, y_train, y_test, name="Test_"):
     '''
     Uses GridSearchCV to tune hyperparameters and saves the GridSearchCV results
     Trains the classifier with the best parameters and scores the model
@@ -134,12 +134,7 @@ def non_linear_svm(data, center=True):
         'gamma': gamma,
         'kernel': kernel,
     }
-    gridsearch(SVC(), params, x_train, x_test, y_train, y_test, "NonLinearSVC_")
-
-def gridsearch(classifier, params, x_train, y_train):
-    start_time = time.time()
-    clf = GridSearchCV(classifier, params, n_jobs=-1, cv=50)
-    print("elapsed: {}".format(time.time() - start_time))
+    gridsearch(SVC(), params, x_train, x_test, y_train, y_test, name="NonLinearSVC_")
 
 def rfc(data, center=True):
     '''
@@ -155,7 +150,7 @@ def rfc(data, center=True):
         'max_depth': max_depth,
         'max_features': max_features,
     }
-    gridsearch(RandomForestClassifier(), params, x_train, x_test, y_train, y_test, "RandomForest_")
+    gridsearch(RandomForestClassifier(), params, x_train, x_test, y_train, y_test, name="RandomForest_")
 
 
 data = pd.read_csv('data/data.csv')
