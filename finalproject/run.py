@@ -221,7 +221,7 @@ def get_ci(scores):
 
 
 data = pd.read_csv('data/data.csv')
-
+neuralnet(data)
 # rfc(data)
 # non_linear_svm(data)
 
