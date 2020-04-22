@@ -66,7 +66,15 @@ The training accuracy is not high enough to prove that the dataset is linearly s
 After these additional experiements, I have convinced myself that my \textbf{dataset is non-trivial}.
 
 \subsection{Performance Metrics}
-I will be using \textbf{K-Folds Cross Validation} for hyperparameter tuning. In K-Folds Cross Validation, I will split the data into a training and testing set. Then I will split the training data into k subsets and use k-1 subsets to train and leave the last subset as validation. I'll be using sklearn's GridSearchCV to accomplish this. \\
+I will be using \textbf{Nested 2-Folds Cross Validation} for hyperparameter tuning. In Nested 2-Folds Cross Validation, I will split data randomly into two halves, X and Y. Then I will perform 10-Folds Cross Validation on X to tune for optimal hyperparameters. I'll be using sklearn's GridSearchCV for hyperparameter tuning. Then I will take the hyper parameters tuned from X and score it using 10-folds cross validation on Y. Then I will switch X and Y and repeat the process. Here is a step by step:
+\begin{enumerate}
+    \item Split dataset into X and Y
+    \item 10 folds cross validation on X and tune hyperparameters
+    \item Use hyperparameters from 2. to create classfier C
+    \item Split Y into 10 folds. For each fold i: train C on all other folds and score on current fold i. This gives 10 scores
+    \item Switch X and Y and repeat steps 1 to 4. This gives 20 scores in total
+    \item Use the 20 scores to calculate confidence interval for the classifier
+\end{enumerate}
 I also plan on analyzing the \textbf{confusion matrix} of resulting test accuracies for each learning method and using \textbf{confidence intervals} as a means of comparing learning methods.
 
 \section{Description of Algorithms}

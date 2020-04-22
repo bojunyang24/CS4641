@@ -136,7 +136,7 @@ def non_linear_svm(data, center=True):
         'gamma': gamma,
         'kernel': kernel,
     }
-    grid = gridsearch(SVC(), params, x_train, y_train, name="NonLinearSVC_")
+    grid = gridsearch(SVC(), params, x_train, y_train, name="NonLinearSVC0_")
     res = grid.cv_results_
     clf = grid.best_estimator_
     scores = cross_val_score(clf, x_test, y_test, cv=10)
@@ -148,7 +148,7 @@ def non_linear_svm(data, center=True):
     # ci = [mean + (t*se), mean - (t*se)]
     # print("95% Confidence Interval: [{}, {}]".format(ci[0], ci[1]))
 
-    grid = gridsearch(SVC(), params, x_test, y_test, name="NonLinearSVC_")
+    grid = gridsearch(SVC(), params, x_test, y_test, name="NonLinearSVC1_")
     res = grid.cv_results_
     clf = grid.best_estimator_
     scores = np.concatenate((scores, cross_val_score(clf, x_train, y_train, cv=10)))
@@ -190,8 +190,8 @@ def rfc(data, center=True):
 
 data = pd.read_csv('data/data.csv')
 
-rfc(data)
-# non_linear_svm(data)
+# rfc(data)
+non_linear_svm(data)
 
 # PCA_analysis(data)
 
