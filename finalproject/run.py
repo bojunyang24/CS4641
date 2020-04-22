@@ -259,8 +259,8 @@ def get_ci(scores, outfile):
 
 data = pd.read_csv('data/data.csv')
 # neuralnet(data)
-# rfc(data)
-non_linear_svm(data)
+rfc(data)
+# non_linear_svm(data)
 
 
 # PCA_analysis(data)
