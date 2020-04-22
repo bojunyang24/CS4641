@@ -153,12 +153,7 @@ def non_linear_svm(data, center=True):
     clf = grid.best_estimator_
     scores = np.concatenate((scores, cross_val_score(clf, x_train, y_train, cv=10)))
 
-    # 9 degrees of freedome 95% two tailed CI
-    t = 2.093
-    mean = np.mean(scores)
-    se = np.std(scores)/20
-    ci = [mean - (t*se), mean + (t*se)]
-    print("95% Confidence Interval: [{}, {}]".format(ci[0], ci[1]))
+    get_ci(scores)
 
 def rfc(data, center=True):
     '''
@@ -174,15 +169,25 @@ def rfc(data, center=True):
         'max_depth': max_depth,
         'max_features': max_features,
     }
-    grid = gridsearch(RandomForestClassifier(), params, x_train, y_train, name="RandomForest_")
+    grid = gridsearch(RandomForestClassifier(), params, x_train, y_train, name="RandomForest_0")
     res = grid.cv_results_
     clf = grid.best_estimator_
     scores = cross_val_score(clf, x_test, y_test, cv=10)
 
-    # 9 degrees of freedome 95% two tailed CI
-    t = 2.262
+    grid = gridsearch(RandomForestClassifier(), params, x_train, y_train, name="RandomForest_1")
+    res = grid.cv_results_
+    clf = grid.best_estimator_
+    scores = np.concatenate((scores, cross_val_score(clf, x_train, y_train, cv=10)))
+    
+    get_ci(scores)
+
+def get_ci(scores):
+    '''
+    19 degrees of freedome 95% two tailed CI
+    '''
+    t = 2.093
     mean = np.mean(scores)
-    se = np.std(scores)/10
+    se = np.std(scores)/len(scores)
     ci = [mean - (t*se), mean + (t*se)]
     print("95% Confidence Interval: [{}, {}]".format(ci[0], ci[1]))
 
@@ -190,8 +195,8 @@ def rfc(data, center=True):
 
 data = pd.read_csv('data/data.csv')
 
-# rfc(data)
-non_linear_svm(data)
+rfc(data)
+# non_linear_svm(data)
 
 # PCA_analysis(data)
 
