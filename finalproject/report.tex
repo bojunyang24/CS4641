@@ -113,7 +113,7 @@ A neural net is basically a bunch of algorithms, designed and modeled loosely li
     \\ The L2 regularization penalty parameter. This penalizes larger weight values to favor smaller values in the weight matrix. This in turn decreases the effect of the activation function, resulting in a less complex function. We want a less complex function to avoid overfitting
     \item learning\_rate\_init: [0.01, 0.001]
     \\ For my purposes, this will be the learning rate for the entirety of the training because I will be using a constant learning rate for all trials to limit the complexity of this GridSearch.
-    \item max\_iter: [500, 1000]
+    \item max\_iter: [500, 1000] \rightarrow [2000, 3000]
     \\ The limit on the number of iterations of training. The solver iterates until convergence or when it has reach the max number of iterations.
 \end{itemize}
 

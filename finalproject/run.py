@@ -188,7 +188,7 @@ def neuralnet(data, center=True):
     activation =  ['logistic', 'relu']
     alpha = [0.0001, 0.001]
     learning_rate_init = [0.01, 0.001]
-    max_iter = [500, 1000]
+    max_iter = [2000, 3000]
     params = {
         'hidden_layer_sizes': hidden_layer_sizes,
         'activation': activation,
