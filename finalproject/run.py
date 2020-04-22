@@ -12,6 +12,7 @@ from sklearn.svm import LinearSVC
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import cross_val_score
 import pickle
 import time
 
@@ -136,6 +137,16 @@ def non_linear_svm(data, center=True):
         'kernel': kernel,
     }
     grid = gridsearch(SVC(), params, x_train, y_train, name="NonLinearSVC_")
+    res = grid.cv_results_
+    clf = grid.best_estimator_
+    scores = cross_val_score(clf, x_test, y_test, cv=10)
+
+    # 9 degrees of freedome 95% two tailed CI
+    t = 2.262
+    mean = np.mean(scores)
+    se = np.std(scores)/10
+    ci = [mean + (t*se), mean - (t*se)]
+    print("95% Confidence Interval: [{}, {}]".format(ci[0], ci[1]))
 
 def rfc(data, center=True):
     '''
@@ -152,6 +163,16 @@ def rfc(data, center=True):
         'max_features': max_features,
     }
     grid = gridsearch(RandomForestClassifier(), params, x_train, y_train, name="RandomForest_")
+    res = grid.cv_results_
+    clf = grid.best_estimator_
+    scores = cross_val_score(clf, x_test, y_test, cv=10)
+
+    # 9 degrees of freedome 95% two tailed CI
+    t = 2.262
+    mean = np.mean(scores)
+    se = np.std(scores)/10
+    ci = [mean + (t*se), mean - (t*se)]
+    print("95% Confidence Interval: [{}, {}]".format(ci[0], ci[1]))
 
 
 
