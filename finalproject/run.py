@@ -20,9 +20,11 @@ import sys
 
 def saveprint(s, filename):
     print(s)
+    temp = sys.stdout
     sys.stdout = open("{}_out.txt".format(filename), "a")
     print(s)
     sys.stdout.close()
+    sys.stdout = temp
 
 def preprocess_data(data, center=True):
     '''
