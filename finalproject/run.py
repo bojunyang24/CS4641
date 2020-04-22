@@ -26,7 +26,7 @@ def preprocess_data(data, center=True):
         scaler = StandardScaler()
         scaler.fit(df)
         df = scaler.transform(df)
-    return train_test_split(df, label, test_size=0.2)
+    return train_test_split(df, label, test_size=0.5)
 
 def train_linear_svm(x_train, x_test, y_train, y_test, kernel="linear"):
     '''
@@ -101,28 +101,29 @@ def plot_3D_proj(data=None,labels=None):
     matplotlib.pyplot.show()
     # return fig
 
-def gridsearch(classifier, params, x_train, x_test, y_train, y_test, name="Test_"):
+def gridsearch(classifier, params, x_train, y_train, name="Test_"):
     '''
     Uses GridSearchCV to tune hyperparameters and saves the GridSearchCV results
     Trains the classifier with the best parameters and scores the model
     '''
     start_time = time.time()
-    clf = GridSearchCV(classifier, params, n_jobs=-1, cv=50)
+    clf = GridSearchCV(classifier, params, n_jobs=-1, cv=10)
     grid = clf.fit(x_train, y_train)
-    print("elapsed: {}".format(time.time() - start_time))
+    print("GridSearchCV elapsed time: {}".format(time.time() - start_time))
 
-    best_params = grid.best_params_
-    best_score = grid.best_score_
-    print("{}GridSearch \nBest params: {} \nScore: {}".format(name, best_params, best_score))
+    # best_params = grid.best_params_
+    # best_score = grid.best_score_
+    # print("{}GridSearch \nBest params: {} \nScore: {}".format(name, best_params, best_score))
     
     # Saves GridSearch Result
-    filename = "{}GridSearchRFC.sav".format(name)
+    filename = "{}GridSearch.sav".format(name)
     pickle.dump(grid, open(filename, 'wb'))
-    
+    return grid
     # Fits with optimal hyperparameters and scores
-    best_model = RandomForestClassifier(**best_params)
-    best_model.fit(x_train, y_train)
-    print("Test Accuracy: {} Train Accuracy: {}".format(best_model.score(x_test, y_test), best_model.score(x_train, y_train)))
+    # best_model = RandomForestClassifier(**best_params)
+    # best_model.fit(x_train, y_train)
+    # print("Test Accuracy: {} Train Accuracy: {}".format(best_model.score(x_test, y_test), best_model.score(x_train, y_train)))
+
 
 def non_linear_svm(data, center=True):
     x_train, x_test, y_train, y_test = preprocess_data(data)
@@ -134,7 +135,7 @@ def non_linear_svm(data, center=True):
         'gamma': gamma,
         'kernel': kernel,
     }
-    gridsearch(SVC(), params, x_train, x_test, y_train, y_test, name="NonLinearSVC_")
+    grid = gridsearch(SVC(), params, x_train, y_train, name="NonLinearSVC_")
 
 def rfc(data, center=True):
     '''
@@ -150,7 +151,8 @@ def rfc(data, center=True):
         'max_depth': max_depth,
         'max_features': max_features,
     }
-    gridsearch(RandomForestClassifier(), params, x_train, x_test, y_train, y_test, name="RandomForest_")
+    grid = gridsearch(RandomForestClassifier(), params, x_train, y_train, name="RandomForest_")
+
 
 
 data = pd.read_csv('data/data.csv')
