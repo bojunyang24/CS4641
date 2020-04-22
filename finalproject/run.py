@@ -213,6 +213,7 @@ def rfc(data, center=True):
     # sys.stdout.close()
 
 def neuralnet(data, center=True):
+    outfile = "MLP"
     x_train, x_test, y_train, y_test = preprocess_data(data)
     hidden_layer_sizes = [(10,10,10),(20,20,20),(10,10),(20,20)]
     activation =  ['logistic', 'relu']
@@ -227,23 +228,49 @@ def neuralnet(data, center=True):
         'max_iter': max_iter,
     }
     grid = gridsearch(MLPClassifier(), params, x_train, y_train, name="MLP0_")
+    saveprint("Best Param 1: {}".format(grid.best_params_), outfile)
     res = grid.cv_results_
     clf = grid.best_estimator_
     scores = cross_val_score(clf, x_test, y_test, cv=10)
 
     grid = gridsearch(MLPClassifier(), params, x_train, y_train, name="MLP1_")
+    saveprint("Best Param 2: {}".format(grid.best_params_), outfile)
     res = grid.cv_results_
     clf = grid.best_estimator_
     scores = np.concatenate((scores, cross_val_score(clf, x_train, y_train, cv=10)))
     
-    outfile = "MLP"
     saveprint(params, outfile)
     get_ci(scores, outfile)
 
-    # sys.stdout = open("non_linear_svm.txt", "a")
-    # print(params)
-    # get_ci(scores)
-    # sys.stdout.close()
+def neuralnet2(data, center=True):
+    outfile = "MLP"
+    x_train, x_test, y_train, y_test = preprocess_data(data)
+    hidden_layer_sizes = [(100,100,100)]
+    activation =  ['relu']
+    alpha = [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05]
+    learning_rate_init = [0.001, 0.005, 0.01, 0.05, 0.1]
+    max_iter = [1500]
+    params = {
+        'hidden_layer_sizes': hidden_layer_sizes,
+        'activation': activation,
+        'alpha': alpha,
+        'learning_rate_init': learning_rate_init,
+        'max_iter': max_iter,
+    }
+    grid = gridsearch(MLPClassifier(), params, x_train, y_train, name="MLP0_")
+    saveprint("Best Param 1: {}".format(grid.best_params_), outfile)
+    res = grid.cv_results_
+    clf = grid.best_estimator_
+    scores = cross_val_score(clf, x_test, y_test, cv=10)
+
+    grid = gridsearch(MLPClassifier(), params, x_train, y_train, name="MLP1_")
+    saveprint("Best Param 2: {}".format(grid.best_params_), outfile)
+    res = grid.cv_results_
+    clf = grid.best_estimator_
+    scores = np.concatenate((scores, cross_val_score(clf, x_train, y_train, cv=10)))
+    
+    saveprint(params, outfile)
+    get_ci(scores, outfile)
 
 def get_ci(scores, outfile):
     '''
@@ -277,6 +304,7 @@ if False:
 # PCA_analysis(data)
 
 # neuralnet(data)
+neuralnet2(data)
 
 # rfc(data)
 
@@ -291,12 +319,11 @@ def rfc_graphs():
     res1 = grid1.cv_results_
     x = [param['max_depth'] for param in res0['params']]
     y = res0['mean_test_score']
-    badplot(x,y, res0['params'], None, 'sqrt', 'log2', "plots/RF_max_depth", "max_depth")
+    get_rfc_graphs(x,y, res0['params'], None, 'sqrt', 'log2', "plots/RF_max_depth", "max_depth")
     x = [param['n_estimators'] for param in res0['params']]
-    badplot(x,y, res0['params'], None, 'sqrt', 'log2', "plots/RF_n_estimators", "n_estimators")
+    get_rfc_graphs(x,y, res0['params'], None, 'sqrt', 'log2', "plots/RF_n_estimators", "n_estimators")
 
-
-def badplot(x, y, params, c1, c2, c3, name, xname, yname='mean_test_score'):
+def get_rfc_graphs(x, y, params, c1, c2, c3, name, xname, yname='mean_test_score'):
     redx = []
     redy = []
     greenx = []
@@ -348,4 +375,169 @@ def badplot(x, y, params, c1, c2, c3, name, xname, yname='mean_test_score'):
     plt.savefig('{}3.png'.format(name))
     plt.clf()
 
-rfc_graphs()
+    uniquex = np.unique(np.array(x))
+
+    redline = make_line(redx, redy, uniquex)
+    greenline = make_line(greenx, greeny, uniquex)
+    blueline = make_line(bluex, bluey, uniquex)
+    plt.semilogx(redline[:,0], redline[:,1], label=str(c1), color="red")
+    plt.semilogx(greenline[:,0], greenline[:,1], label=str(c2), color="green")
+    plt.semilogx(blueline[:,0], blueline[:,1], label=str(c3), color="blue")
+    plt.legend()
+    plt.xlabel(xname)
+    plt.ylabel(yname)
+    plt.savefig('{}_line.png'.format(name))
+    plt.clf()
+
+
+def svm_graphs():
+    grid0 = pickle.load(open('NonLinearSVC0_GridSearch.sav', 'rb'))
+    res0 = grid0.cv_results_
+    grid1 = pickle.load(open('NonLinearSVC1_GridSearch.sav', 'rb'))
+    res1 = grid1.cv_results_
+    x = [param['C'] for param in res0['params']]
+    y = res0['mean_test_score']
+    get_svm_graphs(x,y, res0['params'], 'poly', 'rbf', 'sigmoid', "plots/SVM_C", "C")
+    x = [param['gamma'] for param in res0['params']]
+    get_svm_graphs(x,y, res0['params'], 'poly', 'rbf', 'sigmoid', "plots/SVM_gamma", "gamma")
+
+def get_svm_graphs(x, y, params, c1, c2, c3, name, xname, yname='mean_test_score'):
+    redx = []
+    redy = []
+    greenx = []
+    greeny = []
+    bluex = []
+    bluey = []
+    i = 0
+    for param in params:
+        if param['kernel'] == c1:
+            redx.append(x[i])
+            redy.append(y[i])
+        if param['kernel'] == c2:
+            greenx.append(x[i])
+            greeny.append(y[i])
+        if param['kernel'] == c3:
+            bluex.append(x[i])
+            bluey.append(y[i])
+        i+=1
+    plt.scatter(redx,redy,color='red',label=c1)
+    plt.scatter(greenx,greeny,color='green',label=c2)
+    plt.scatter(bluex,bluey,color='blue',label=c3)
+    plt.legend()
+    plt.xlabel(xname)
+    plt.ylabel(yname)
+    if xname=='gamma':
+        plt.xlim(0.0001, 10000)
+    plt.xscale('log')
+    plt.savefig('{}0.png'.format(name))
+    plt.clf()
+    
+    plt.scatter(redx,redy,color='red',label=c1)
+    plt.scatter(greenx,greeny,color='green',label=c2)
+    plt.legend()
+    plt.xlabel(xname)
+    plt.ylabel(yname)
+    if xname=='gamma':
+        plt.xlim(0.0001, 10000)
+    plt.xscale('log')
+    plt.savefig('{}1.png'.format(name))
+    plt.clf()
+
+    plt.scatter(greenx,greeny,color='green',label=c2)
+    plt.scatter(bluex,bluey,color='blue',label=c3)
+    plt.legend()
+    plt.xlabel(xname)
+    plt.ylabel(yname)
+    if xname=='gamma':
+        plt.xlim(0.0001, 10000)
+    plt.xscale('log')
+    plt.savefig('{}2.png'.format(name))
+    plt.clf()
+
+    plt.scatter(redx,redy,color='red',label=c1)
+    plt.scatter(bluex,bluey,color='blue',label=c3)
+    plt.legend()
+    plt.xlabel(xname)
+    plt.ylabel(yname)
+    if xname=='gamma':
+        plt.xlim(0.0001, 10000)
+    plt.xscale('log')
+    plt.savefig('{}3.png'.format(name))
+    plt.clf()
+
+    uniquex = np.unique(np.array(x))
+
+    redline = make_line(redx, redy, uniquex)
+    greenline = make_line(greenx, greeny, uniquex)
+    blueline = make_line(bluex, bluey, uniquex)
+    plt.semilogx(redline[:,0], redline[:,1], label=str(c1), color="red")
+    plt.semilogx(greenline[:,0], greenline[:,1], label=str(c2), color="green")
+    plt.semilogx(blueline[:,0], blueline[:,1], label=str(c3), color="blue")
+    plt.legend()
+    plt.xlabel(xname)
+    plt.ylabel(yname)
+    plt.savefig('{}_line.png'.format(name))
+    plt.clf()
+
+def make_line(x,y,xvals):
+    xy = np.concatenate((np.reshape(x, (len(x),1)), np.reshape(y, (len(y),1))), axis=1)
+    line = []
+    for gam in xvals:
+        targets = np.where(xy[:,0] == gam)
+        line.append([gam, np.average(xy[targets,1])])
+    return np.array(line)
+
+def nn_graphs():
+    grid0 = pickle.load(open('MLP0_GridSearch.sav', 'rb'))
+    res0 = grid0.cv_results_
+    grid1 = pickle.load(open('MLP1_GridSearch.sav', 'rb'))
+    res1 = grid1.cv_results_
+    y = res0['mean_test_score']
+    x = [param['alpha'] for param in res0['params']]
+    get_nn_graphs(x,y, res0['params'], 'logistic', 'relu', "plots/MLP_alpha", "alpha")
+    x = [param['learning_rate_init'] for param in res0['params']]
+    get_nn_graphs(x,y, res0['params'], 'logistic', 'relu', "plots/MLP_learning_rate_init", "learning_rate_init")
+    x = [param['max_iter'] for param in res0['params']]
+    get_nn_graphs(x,y, res0['params'], 'logistic', 'relu', "plots/MLP_max_iter", "max_iter")
+
+def get_nn_graphs(x, y, params, c1, c2, name, xname, yname='mean_test_score', weirdx=False):
+    redx = []
+    redy = []
+    greenx = []
+    greeny = []
+    bluex = []
+    bluey = []
+    i = 0
+    for param in params:
+        if param['activation'] == c1:
+            if weirdx:
+                redx.append(x[i][0])
+            else:
+                redx.append(x[i])
+            redy.append(y[i])
+        if param['activation'] == c2:
+            if weirdx:
+                greenx.append(x[i][0])
+            else:
+                greenx.append(x[i])
+            greeny.append(y[i])
+        i+=1
+
+    uniquex = np.unique(np.array(x))
+
+    redline = make_line(redx, redy, uniquex)
+    greenline = make_line(greenx, greeny, uniquex)
+    plt.semilogx(redline[:,0], redline[:,1], label=str(c1), color="red")
+    plt.semilogx(greenline[:,0], greenline[:,1], label=str(c2), color="green")
+    plt.legend()
+    plt.xlabel(xname)
+    plt.ylabel(yname)
+    # plt.show()
+    plt.savefig('{}_line.png'.format(name))
+    plt.clf()
+
+# rfc_graphs()
+
+# svm_graphs()
+
+# nn_graphs()

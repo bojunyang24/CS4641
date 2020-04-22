@@ -125,7 +125,7 @@ Here is the set of hyperparameters that I tuned for Random Forests:
     \item max\_depth: [100, 200, 300, 400, 500]
     \item max\_features: ['sqrt', 'log2', None]
 \end{itemize}
-Each GridSearchCV on half of the data with these hyperparameters took about 184 seconds.
+Each GridSearchCV on a split half the size of the data with these hyperparameters took about 184 seconds so the whole experiement took \textbf{368s} to run. \\
 Let us analyze this first batch of graphs where the x-axis is max\_depth, the y-axis is mean\_test\_score, and the colors correspond to max\_features: \\
 \includegraphics[width=0.5\textwidth]{RF_max_depth0.png}
 \includegraphics[width=0.5\textwidth]{RF_max_depth1.png}
@@ -139,6 +139,46 @@ Let us look at the second batch of graphs where the x-axis is n\_estimators, the
 \includegraphics[width=0.5\textwidth]{RF_n_estimators3.png}
 Looking at these graphs, we see again that the green and blue points out-perform the red points. The blue and green points also seem to be evenly matched as well. The blue point with the best score has around 300 n\_estimators but there seems to be an upward trend in score as n\_estimators increase for blue points. The green point with the highest score has around 500 n\_estimators. The distribution of green points does not have any noticeable trend. \\
 Based on these graphs, there is no clear "best" set of hyperparameters. If we were to choose, we should choose either sqrt or log2 for the max\_features, 300 for max\_depth, and 300 or 500 for n\_estimators. The best set of hyperparameters that GridSearchCV returned was ['max\_depth': 300, 'max\_features': 'sqrt', 'n\_estimators': 500]. This is expected based off of our observations of the distributions of the graphs.
+
+\subsection{Tuning Non-Linear SMVs}
+Here is the set of hyperparameters that I tuned for Non-Linear SVMs:
+\begin{itemize}
+    \item C: [1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03, 1.e+04]
+    \item kernel: ['poly', 'rbf', 'sigmoid'] 
+    \item gamma: [1.e-03, 1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03]
+\end{itemize}
+Each GridSearchCV on a split half the size of the data usually took 7 seconds to run. However, sometimes it would take significantly longer to converge. My results took \textbf{14s} to complete.
+
+\subsection{Tuning Neural Nets}
+Here is the set of hyperparameters that I tuned for MLP:
+\begin{itemize}
+    \item hidden\_layer\_sizes: [ (10, 10, 10), (20, 20, 20), (10, 10), (20, 20) ]
+    \item activation: ['logistic', 'relu']
+    \item apha: [0.0001, 0.001]
+    \item learning\_rate\_init: [0.01, 0.001]
+    \item max\_iter: [500, 1000] $\rightarrow$ [2000, 3000]
+    \\ None of my MLPs would converge within 1000 iterations so I increased the max\_iter
+\end{itemize}
+Each GridSearchCV on a split half the size of the data took 950 - 1000 seconds to run. This first round of my experiment took \textbf{2008s} to complete. \\
+These combinations of hyperparameters took a long time to run but did not give me too much data. Here are some graphs showing the effects of each hyperparameter: \\
+\includegraphics[width=0.33\textwidth]{MLP_alpha_line.png}
+\includegraphics[width=0.33\textwidth]{MLP_learning_rate_init_line.png}
+\includegraphics[width=0.33\textwidth]{MLP_max_iter_line.png}
+Each graph was made this way: I took the average mean\_test\_score of each activation function at each x-value of (alpha, learning\_rate\_init, max\_iter). Since I only had two different values for each of these, there is a straight line connecting the two averages to show a very rough estimate of a trend. From these graphs, we can see that higher scores are associated with:
+\begin{itemize}
+    \item higher alpha value
+    \item higher learning rate for relu, lower for logistic
+    \item lower max iterations. This is probably because a higher alpha reduces \textbf{overfitting}
+\end{itemize}
+Looking at the MLP\_out.txt, I printed the best params of the two grid searches I did. I noticed that 3 hidden layers did better with a higher learning rate while 2 hidden layers did better with a lower learning rate. From these results, it is clear that using relu activation for the neurons performed a lot better than using logistic. This makes sense because the logistic function Sklearn's MLP uses is the sigmoid function. The sigmoid function is good for binary classification but relu is used in almost every other type of problem. It is hard to conclude anything about the learning rate and it seems we do better with lower max\_iterations. So I took these results to run another experiment in which I only vary alpha and learning rate. Here are the hyperparameters:
+\begin{itemize}
+    \item hidden\_layer\_sizes: [(100, 100, 100)]
+    \item activation: ['relu']
+    \item apha: [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.1]
+    \item learning\_rate\_init: [0.001, 0.005, 0.01, 0.05, 0.1]
+    \item max\_iter: 1500
+\end{itemize}
+
 
 \nextproblem
 
