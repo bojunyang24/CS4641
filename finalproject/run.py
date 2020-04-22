@@ -18,6 +18,12 @@ import pickle
 import time
 import sys
 
+def saveprint(s, filename):
+    sys.stdout = open("{}_out.txt".format(filename), "a")
+    print(s)
+    sys.stdout.close()
+    print(s)
+
 def preprocess_data(data, center=True):
     '''
     centers and splits the data for testing and training
@@ -112,9 +118,13 @@ def gridsearch(classifier, params, x_train, y_train, name="Test_"):
     start_time = time.time()
     clf = GridSearchCV(classifier, params, n_jobs=-1, cv=10)
     grid = clf.fit(x_train, y_train)
-    sys.stdout = open("non_linear_svm.txt", "a")
-    print("GridSearchCV elapsed time: {}".format(time.time() - start_time))
-    sys.stdout.close()
+    
+    saveprint("GridSearchCV elapsed time: {}".format(time.time() - start_time), name[0:len(name)-2])
+
+    # sys.stdout = open("non_linear_svm.txt", "a")
+    # print("GridSearchCV elapsed time: {}".format(time.time() - start_time))
+    # sys.stdout.close()
+    # print("GridSearchCV elapsed time: {}".format(time.time() - start_time))
 
     # best_params = grid.best_params_
     # best_score = grid.best_score_
@@ -156,10 +166,15 @@ def non_linear_svm(data, center=True):
     res = grid.cv_results_
     clf = OneVsRestClassifier(grid.best_estimator_)
     scores = np.concatenate((scores, cross_val_score(clf, x_train, y_train, cv=10)))
-    sys.stdout = open("non_linear_svm.txt", "a")
-    print(params)
-    get_ci(scores)
-    sys.stdout.close()
+    
+    outfile = "NonLinearSVC"
+    saveprint(params, outfile)
+    get_ci(scores, outfile)
+
+    # sys.stdout = open("non_linear_svm.txt", "a")
+    # print(params)
+    # get_ci(scores)
+    # sys.stdout.close()
 
 def rfc(data, center=True):
     '''
@@ -185,7 +200,14 @@ def rfc(data, center=True):
     clf = grid.best_estimator_
     scores = np.concatenate((scores, cross_val_score(clf, x_train, y_train, cv=10)))
     
-    get_ci(scores)
+    outfile = "RandomForest"
+    saveprint(params, outfile)
+    get_ci(scores, outfile)
+
+    # sys.stdout = open("non_linear_svm.txt", "a")
+    # print(params)
+    # get_ci(scores)
+    # sys.stdout.close()
 
 def neuralnet(data, center=True):
     x_train, x_test, y_train, y_test = preprocess_data(data)
@@ -210,10 +232,17 @@ def neuralnet(data, center=True):
     res = grid.cv_results_
     clf = grid.best_estimator_
     scores = np.concatenate((scores, cross_val_score(clf, x_train, y_train, cv=10)))
+    
+    outfile = "MLP"
+    saveprint(params, outfile)
+    get_ci(scores, outfile)
 
-    get_ci(scores)
+    # sys.stdout = open("non_linear_svm.txt", "a")
+    # print(params)
+    # get_ci(scores)
+    # sys.stdout.close()
 
-def get_ci(scores):
+def get_ci(scores, outfile):
     '''
     19 degrees of freedome 95% two tailed CI
     '''
@@ -221,7 +250,8 @@ def get_ci(scores):
     mean = np.mean(scores)
     se = np.std(scores)/len(scores)
     ci = [mean - (t*se), mean + (t*se)]
-    print("95% Confidence Interval: [{}, {}]".format(ci[0], ci[1]))
+    saveprint("95% Confidence Interval: [{}, {}]".format(ci[0], ci[1]), outfile)
+    # print("95% Confidence Interval: [{}, {}]".format(ci[0], ci[1]))
 
 
 
