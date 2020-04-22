@@ -16,6 +16,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.neural_network import MLPClassifier
 import pickle
 import time
+import sys
 
 def preprocess_data(data, center=True):
     '''
@@ -111,7 +112,9 @@ def gridsearch(classifier, params, x_train, y_train, name="Test_"):
     start_time = time.time()
     clf = GridSearchCV(classifier, params, n_jobs=-1, cv=10)
     grid = clf.fit(x_train, y_train)
+    sys.stdout = open("non_linear_svm.txt", "a")
     print("GridSearchCV elapsed time: {}".format(time.time() - start_time))
+    sys.stdout.close()
 
     # best_params = grid.best_params_
     # best_score = grid.best_score_
@@ -153,8 +156,10 @@ def non_linear_svm(data, center=True):
     res = grid.cv_results_
     clf = OneVsRestClassifier(grid.best_estimator_)
     scores = np.concatenate((scores, cross_val_score(clf, x_train, y_train, cv=10)))
-
+    sys.stdout = open("non_linear_svm.txt", "a")
+    print(params)
     get_ci(scores)
+    sys.stdout.close()
 
 def rfc(data, center=True):
     '''
@@ -201,7 +206,7 @@ def neuralnet(data, center=True):
     clf = grid.best_estimator_
     scores = cross_val_score(clf, x_test, y_test, cv=10)
 
-    grid = gridsearch(RandomForestClassifier(), params, x_train, y_train, name="MLP1_")
+    grid = gridsearch(MLPClassifier(), params, x_train, y_train, name="MLP1_")
     res = grid.cv_results_
     clf = grid.best_estimator_
     scores = np.concatenate((scores, cross_val_score(clf, x_train, y_train, cv=10)))
@@ -221,9 +226,9 @@ def get_ci(scores):
 
 
 data = pd.read_csv('data/data.csv')
-neuralnet(data)
+# neuralnet(data)
 # rfc(data)
-# non_linear_svm(data)
+non_linear_svm(data)
 
 
 # PCA_analysis(data)
