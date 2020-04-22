@@ -157,7 +157,7 @@ def non_linear_svm(data, center=True):
     t = 2.093
     mean = np.mean(scores)
     se = np.std(scores)/20
-    ci = [mean + (t*se), mean - (t*se)]
+    ci = [mean - (t*se), mean + (t*se)]
     print("95% Confidence Interval: [{}, {}]".format(ci[0], ci[1]))
 
 def rfc(data, center=True):
