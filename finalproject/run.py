@@ -139,7 +139,7 @@ def non_linear_svm(data, center=True):
     }
     grid = gridsearch(SVC(), params, x_train, y_train, name="NonLinearSVC0_")
     res = grid.cv_results_
-    clf = OneVsRestClassifier(grid.best_estimator_)
+    clf = grid.best_estimator_
     scores = cross_val_score(clf, x_test, y_test, cv=10)
 
     # 9 degrees of freedome 95% two tailed CI
