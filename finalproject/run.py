@@ -142,9 +142,21 @@ def non_linear_svm(data, center=True):
     scores = cross_val_score(clf, x_test, y_test, cv=10)
 
     # 9 degrees of freedome 95% two tailed CI
-    t = 2.262
+    # t = 2.262
+    # mean = np.mean(scores)
+    # se = np.std(scores)/10
+    # ci = [mean + (t*se), mean - (t*se)]
+    # print("95% Confidence Interval: [{}, {}]".format(ci[0], ci[1]))
+
+    grid = gridsearch(SVC(), params, x_test, y_test, name="NonLinearSVC_")
+    res = grid.cv_results_
+    clf = grid.best_estimator_
+    scores = np.concatenate((scores, cross_val_score(clf, x_train, y_train, cv=10)))
+
+    # 9 degrees of freedome 95% two tailed CI
+    t = 2.093
     mean = np.mean(scores)
-    se = np.std(scores)/10
+    se = np.std(scores)/20
     ci = [mean + (t*se), mean - (t*se)]
     print("95% Confidence Interval: [{}, {}]".format(ci[0], ci[1]))
 
@@ -171,7 +183,7 @@ def rfc(data, center=True):
     t = 2.262
     mean = np.mean(scores)
     se = np.std(scores)/10
-    ci = [mean + (t*se), mean - (t*se)]
+    ci = [mean - (t*se), mean + (t*se)]
     print("95% Confidence Interval: [{}, {}]".format(ci[0], ci[1]))
 
 

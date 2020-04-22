@@ -1,7 +1,7 @@
 # Fdb version 3
-["pdflatex"] 1587525881 "/Users/bojunyang/school/CS4641/finalproject/report.tex" "/Users/bojunyang/school/CS4641/finalproject/report.pdf" "report" 1587531127
+["pdflatex"] 1587525881 "/Users/bojunyang/school/CS4641/finalproject/report.tex" "/Users/bojunyang/school/CS4641/finalproject/report.pdf" "report" 1587531828
   "/Users/bojunyang/school/CS4641/finalproject/report.aux" 1587525881 1821 865214e00f17062a43cf9913571731b9 ""
-  "/Users/bojunyang/school/CS4641/finalproject/report.tex" 1587531126 7632 2303d35649695796fc71c437027ce6b6 ""
+  "/Users/bojunyang/school/CS4641/finalproject/report.tex" 1587531828 7632 2303d35649695796fc71c437027ce6b6 ""
   "/usr/local/texlive/2019/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/local/texlive/2019/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2019/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
@@ -66,11 +66,11 @@
   "plots/pca1.png" 1587445059 453291 e90af42d8c234b1061dc1ea4e7e5079c ""
   "report.aux" 1587525881 1821 865214e00f17062a43cf9913571731b9 "pdflatex"
   "report.out" 1587525881 583 64ee3fdb2f6c324f0161cf3b79b3f364 "pdflatex"
-  "report.tex" 1587531126 7632 2303d35649695796fc71c437027ce6b6 ""
+  "report.tex" 1587531828 7632 2303d35649695796fc71c437027ce6b6 ""
   (generated)
-  "report.pdf"
-  "/Users/bojunyang/school/CS4641/finalproject/report.log"
-  "/Users/bojunyang/school/CS4641/finalproject/report.pdf"
-  "report.out"
-  "report.aux"
   "report.log"
+  "report.aux"
+  "/Users/bojunyang/school/CS4641/finalproject/report.pdf"
+  "report.pdf"
+  "report.out"
+  "/Users/bojunyang/school/CS4641/finalproject/report.log"
