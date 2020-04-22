@@ -19,10 +19,10 @@ import time
 import sys
 
 def saveprint(s, filename):
+    print(s)
     sys.stdout = open("{}_out.txt".format(filename), "a")
     print(s)
     sys.stdout.close()
-    print(s)
 
 def preprocess_data(data, center=True):
     '''
