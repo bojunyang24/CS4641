@@ -59,23 +59,14 @@ The underlying supervised learning problem is to \textbf{classify the genre} of 
 The training accuracy is not high enough to prove that the dataset is linearly separable. But to further research the triviality of the dataset, I did a few more experiements:
 \begin{itemize}
     \item 3D PCA Plot
-    \\ \includegraphics[width=0.45\textwidth]{pca0} \includegraphics[width=0.45\textwidth]{pca1}
+    \\ \includegraphics[width=0.45\textwidth]{pca0} \includegraphics[width=0.5\textwidth]{pca1}
     \\ The graph on the right is a zoomed in version of the left graph. It is clear that there are many data points mixed together and the dataset is at least not linearly separable in 3 dimensions.
     \item Linear Regression: I one-hot-encoded the labels and tried to fit a linear regression. The testing and training accuracy was 0.26 and 0.31 respectively. This serves as more evidence that the dataset is non-trivial.
 \end{itemize}
 After these additional experiements, I have convinced myself that my \textbf{dataset is non-trivial}.
 
 \subsection{Performance Metrics}
-I will be using \textbf{Nested 2-Folds Cross Validation} for hyperparameter tuning. In Nested 2-Folds Cross Validation, I will split data randomly into two halves, X and Y. Then I will perform 10-Folds Cross Validation on X to tune for optimal hyperparameters. I'll be using sklearn's GridSearchCV for hyperparameter tuning. Then I will take the hyper parameters tuned from X and score it using 10-folds cross validation on Y. Then I will switch X and Y and repeat the process. Here is a step by step:
-\begin{enumerate}
-    \item Split dataset into X and Y
-    \item 10 folds cross validation on X and tune hyperparameters
-    \item Use hyperparameters from 2. to create classfier C
-    \item Split Y into 10 folds. For each fold i: train C on all other folds and score on current fold i. This gives 10 scores
-    \item Switch X and Y and repeat steps 1 to 4. This gives 20 scores in total
-    \item Use the 20 scores to calculate confidence interval for the classifier
-\end{enumerate}
-I also plan on analyzing the \textbf{confusion matrix} of resulting test accuracies for each learning method and using \textbf{confidence intervals} as a means of comparing learning methods.
+I will be scoring each classfier using cross validation on the testing dataset to obtain k independent scores. These scores represent the accuracy at which the classifier sucessfully classified each data point. I will also be further exploring results with a \textbf{confusion matrix} in a later section. I'll be using the cross validated scores to create a confidence interval that will help in comparing the classifiers to each other.
 
 \section{Description of Algorithms}
 \subsection{Random Forests with Bagging}
@@ -113,9 +104,41 @@ A neural net is basically a bunch of algorithms, designed and modeled loosely li
     \\ The L2 regularization penalty parameter. This penalizes larger weight values to favor smaller values in the weight matrix. This in turn decreases the effect of the activation function, resulting in a less complex function. We want a less complex function to avoid overfitting
     \item learning\_rate\_init: [0.01, 0.001]
     \\ For my purposes, this will be the learning rate for the entirety of the training because I will be using a constant learning rate for all trials to limit the complexity of this GridSearch.
-    \item max\_iter: [500, 1000] \rightarrow [2000, 3000]
+    \item max\_iter: [500, 1000] $\rightarrow$ [2000, 3000]
     \\ The limit on the number of iterations of training. The solver iterates until convergence or when it has reach the max number of iterations.
 \end{itemize}
+
+\section{Tuning Hyperparameters}
+I will be using \textbf{Nested k-Folds Cross Validation} for hyperparameter tuning. In Nested k-Folds Cross Validation, I will split data randomly into two halves, X and Y. Then I will perform k-Folds Cross Validation on X to tune for optimal hyperparameters. I'll be using sklearn's \textbf{GridSearchCV} for hyperparameter tuning. Then I will take the hyper parameters tuned from X and score it using k-folds cross validation on Y. Then I will switch X and Y and repeat the process. I chose k=10 because my data has 10 different labels and this will give me 20 data points to calculate a confidence interval from. Here is a short step by step guide to my process:
+\begin{enumerate}
+    \item Split dataset into X and Y
+    \item 10 folds cross validation on X and tune hyperparameters
+    \item Use hyperparameters from 2. to create classfier C
+    \item Split Y into 10 folds. For each fold i: train C on all other folds and score on current fold i. This gives 10 scores
+    \item Switch X and Y and repeat steps 1 to 4. This gives 20 scores in total
+    \item Use the 20 scores to calculate confidence interval for the classifier
+\end{enumerate}
+\subsection{Tuning Random Forests}
+Here is the set of hyperparameters that I tuned for Random Forests:
+\begin{itemize}
+    \item n\_estimators: [100, 200, 300, 400, 500]
+    \item max\_depth: [100, 200, 300, 400, 500]
+    \item max\_features: ['sqrt', 'log2', None]
+\end{itemize}
+Each GridSearchCV on half of the data with these hyperparameters took about 184 seconds.
+Let us analyze this first batch of graphs where the x-axis is max\_depth, the y-axis is mean\_test\_score, and the colors correspond to max\_features: \\
+\includegraphics[width=0.5\textwidth]{RF_max_depth0.png}
+\includegraphics[width=0.5\textwidth]{RF_max_depth1.png}
+\includegraphics[width=0.5\textwidth]{RF_max_depth2.png}
+\includegraphics[width=0.5\textwidth]{RF_max_depth3.png}
+Looking at these graphs, we can see that green and blue points consistently out-perform the red points. When we compare green and blue, it seems that both are evenly distributed. Both colors tend to have higher scores around 300 max\_depth. \\ \\
+Let us look at the second batch of graphs where the x-axis is n\_estimators, the y-axis is mean\_test\_score, and the colors correspond to max\_features: \\
+\includegraphics[width=0.5\textwidth]{RF_n_estimators0.png}
+\includegraphics[width=0.5\textwidth]{RF_n_estimators1.png}
+\includegraphics[width=0.5\textwidth]{RF_n_estimators2.png}
+\includegraphics[width=0.5\textwidth]{RF_n_estimators3.png}
+Looking at these graphs, we see again that the green and blue points out-perform the red points. The blue and green points also seem to be evenly matched as well. The blue point with the best score has around 300 n\_estimators but there seems to be an upward trend in score as n\_estimators increase for blue points. The green point with the highest score has around 500 n\_estimators. The distribution of green points does not have any noticeable trend. \\
+Based on these graphs, there is no clear "best" set of hyperparameters. If we were to choose, we should choose either sqrt or log2 for the max\_features, 300 for max\_depth, and 300 or 500 for n\_estimators. The best set of hyperparameters that GridSearchCV returned was ['max\_depth': 300, 'max\_features': 'sqrt', 'n\_estimators': 500]. This is expected based off of our observations of the distributions of the graphs.
 
 \nextproblem
 

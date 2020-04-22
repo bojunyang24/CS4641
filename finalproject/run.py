@@ -14,6 +14,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.neural_network import MLPClassifier
+from matplotlib import pyplot as plt
 import pickle
 import time
 import sys
@@ -258,14 +259,6 @@ def get_ci(scores, outfile):
 
 
 data = pd.read_csv('data/data.csv')
-# neuralnet(data)
-rfc(data)
-# non_linear_svm(data)
-
-
-# PCA_analysis(data)
-
-# fit_linear_regression(data)
 
 # average test and train score for linear svm
 if False:
@@ -278,3 +271,81 @@ if False:
         test+=test_score
         train+=train_score
     print("Avg Test Accuracy: {} Avg Train Accuracy: {}".format(test/size, train/size))
+
+# fit_linear_regression(data)
+
+# PCA_analysis(data)
+
+# neuralnet(data)
+
+# rfc(data)
+
+# non_linear_svm(data)
+
+### Graph code below ###
+
+def rfc_graphs():
+    grid0 = pickle.load(open('RandomForest0_GridSearch.sav', 'rb'))
+    res0 = grid0.cv_results_
+    grid1 = pickle.load(open('RandomForest0_GridSearch.sav', 'rb'))
+    res1 = grid1.cv_results_
+    x = [param['max_depth'] for param in res0['params']]
+    y = res0['mean_test_score']
+    badplot(x,y, res0['params'], None, 'sqrt', 'log2', "plots/RF_max_depth", "max_depth")
+    x = [param['n_estimators'] for param in res0['params']]
+    badplot(x,y, res0['params'], None, 'sqrt', 'log2', "plots/RF_n_estimators", "n_estimators")
+
+
+def badplot(x, y, params, c1, c2, c3, name, xname, yname='mean_test_score'):
+    redx = []
+    redy = []
+    greenx = []
+    greeny = []
+    bluex = []
+    bluey = []
+    i = 0
+    for param in params:
+        if param['max_features'] == c1:
+            redx.append(x[i])
+            redy.append(y[i])
+        if param['max_features'] == c2:
+            greenx.append(x[i])
+            greeny.append(y[i])
+        if param['max_features'] == c3:
+            bluex.append(x[i])
+            bluey.append(y[i])
+        i+=1
+    plt.scatter(redx,redy,color='red',label='None')
+    plt.scatter(greenx,greeny,color='green',label='sqrt')
+    plt.scatter(bluex,bluey,color='blue',label='log2')
+    plt.legend()
+    plt.xlabel(xname)
+    plt.ylabel(yname)
+    plt.savefig('{}0.png'.format(name))
+    plt.clf()
+    
+    plt.scatter(redx,redy,color='red',label='None')
+    plt.scatter(greenx,greeny,color='green',label='sqrt')
+    plt.legend()
+    plt.xlabel(xname)
+    plt.ylabel(yname)
+    plt.savefig('{}1.png'.format(name))
+    plt.clf()
+
+    plt.scatter(greenx,greeny,color='green',label='sqrt')
+    plt.scatter(bluex,bluey,color='blue',label='log2')
+    plt.legend()
+    plt.xlabel(xname)
+    plt.ylabel(yname)
+    plt.savefig('{}2.png'.format(name))
+    plt.clf()
+
+    plt.scatter(redx,redy,color='red',label='None')
+    plt.scatter(bluex,bluey,color='blue',label='log2')
+    plt.legend()
+    plt.xlabel(xname)
+    plt.ylabel(yname)
+    plt.savefig('{}3.png'.format(name))
+    plt.clf()
+
+rfc_graphs()
