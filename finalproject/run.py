@@ -101,13 +101,45 @@ def plot_3D_proj(data=None,labels=None):
     matplotlib.pyplot.show()
     # return fig
 
-def gridsearch(classifier, params, x_train, y_train):
+def gridsearch(classifier, params, x_train, y_train, x_test, y_test, name="Test_"):
+    '''
+    Uses GridSearchCV to tune hyperparameters and saves the GridSearchCV results
+    Trains the classifier with the best parameters and scores the model
+    '''
+    start_time = time.time()
     clf = GridSearchCV(classifier, params, n_jobs=-1, cv=50)
-    return clf.fit(x_train, y_train)
+    grid = clf.fit(x_train, y_train)
+    print("elapsed: {}".format(time.time() - start_time))
+
+    best_params = grid.best_params_
+    best_score = grid.best_score_
+    print("{}GridSearch \nBest params: {} \nScore: {}".format(name, best_params, best_score))
+    
+    # Saves GridSearch Result
+    filename = "{}GridSearchRFC.sav".format(name)
+    pickle.dump(grid, open(filename, 'wb'))
+    
+    # Fits with optimal hyperparameters and scores
+    best_model = RandomForestClassifier(**best_params)
+    best_model.fit(x_train, y_train)
+    print("Test Accuracy: {} Train Accuracy: {}".format(best_model.score(x_test, y_test), best_model.score(x_train, y_train)))
 
 def non_linear_svm(data, center=True):
     x_train, x_test, y_train, y_test = preprocess_data(data)
+    C = np.logspace(-2, 4, 7)
+    gamma = np.logspace(-3, 3, 7)
+    kernel = ['poly', 'rbf', 'sigmoid']
+    params = {
+        'C': C,
+        'gamma': gamma,
+        'kernel': kernel,
+    }
+    gridsearch(SVC(), params, x_train, x_test, y_train, y_test, "NonLinearSVC_")
 
+def gridsearch(classifier, params, x_train, y_train):
+    start_time = time.time()
+    clf = GridSearchCV(classifier, params, n_jobs=-1, cv=50)
+    print("elapsed: {}".format(time.time() - start_time))
 
 def rfc(data, center=True):
     '''
@@ -123,21 +155,13 @@ def rfc(data, center=True):
         'max_depth': max_depth,
         'max_features': max_features,
     }
-    grid = gridsearch(RandomForestClassifier(), params, x_train, y_train)
-    best_params = grid.best_params_
-    best_score = grid.best_score_
-    print("GridSearch \nBest params: {} \nScore: {}".format(best_params, best_score))
-    
-    filename = "GridSearchRFC.sav"
-    pickle.dump(grid, open(filename, 'wb'))
-    
-    best_model = RandomForestClassifier(**best_params)
-    best_model.fit(x_train, y_train)
-    print("Test Accuracy: {} Train Accuracy: {}".format(best_model.score(x_test, y_test), best_model.score(x_train, y_train)))
+    gridsearch(RandomForestClassifier(), params, x_train, x_test, y_train, y_test, "RandomForest_")
+
 
 data = pd.read_csv('data/data.csv')
 
-rfc(data)
+# rfc(data)
+non_linear_svm(data)
 
 # PCA_analysis(data)
 

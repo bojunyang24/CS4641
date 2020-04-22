@@ -71,21 +71,34 @@ I also plan on analyzing the \textbf{confusion matrix} of resulting test accurac
 
 \section{Description of Algorithms}
 \subsection{Random Forests with Bagging}
-A random forest consists of a large number of individual decision trees that form an ensemble. An ensemble bascially uses multiple algorithms to obtain more accurate predictions than any one individual of the ensemble. In a random forest, the ensemble is made up of relatively uncorrelated decision trees. Bagging (Bootstrap Aggregation) is a method that allows each decision tree in the random forest to randomly sample the dataset with replacement. Since decision trees are very sensitive the training data, this greatly increases the variablility of the decision trees. Here are the hyperparameters:
+A random forest consists of a large number of individual decision trees that form an ensemble. An ensemble bascially uses multiple algorithms to obtain more accurate predictions than any one individual of the ensemble. In a random forest, the ensemble is made up of relatively uncorrelated decision trees. Bagging (Bootstrap Aggregation) is a method that allows each decision tree in the random forest to randomly sample the dataset with replacement. Since decision trees are very sensitive the training data, this greatly increases the variablility of the decision trees. Here are the hyperparameters I will optimize:
 \begin{itemize}
-    \item n\_estimators: int. Number of trees in the forest. Affects the size of the random forest.
-    \item max\_depth: int. The maximum depth of each decision tree. affects the complexity of each tree.
-    \item max\_features: int or [sqrt(n\_features), log2(n\_features), n\_features]. The max size of the random subsets of features to consider when splitting a node.
+    \item n\_estimators: [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    \\ Number of trees in the forest. Affects the size of the random forest.
+    \item max\_depth: [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    \\ The maximum depth of each decision tree. affects the complexity of each tree.
+    \item max\_features: ['sqrt', 'log2', None]
+    \\ The max size of the random subsets of features to consider when splitting a node.
 \end{itemize}
 
 \subsection{Support Vector Machines with a non-linear kernel}
-SVMs attempts to separate datapoints by its labels by finding the best hyperplane using the large margin principle. For non-linear data, it can use the kernel trick to map the data to a higher dimension in hopes of finding a more suitable hyperplane. However, SVMs are inherently binary classifiers so it is not suitable for my dataset that has 10 unique labels. I will be using the \textbf{one-versus-all} classification technique to train my multiclass SVM. Here are the hyperparameters:
+SVMs attempts to separate datapoints by its labels by finding the best hyperplane using the large margin principle. For non-linear data, it can use the kernel trick to map the data to a higher dimension in hopes of finding a more suitable hyperplane. However, SVMs are inherently binary classifiers so it is not suitable for my dataset that has 10 unique labels. I will be using the \textbf{one-versus-all} classification technique to train my multiclass SVM. Here are the hyperparameters I will optimize:
 \begin{itemize}
-    \item C: int. Regularization paramenter represents how much I want to avoid misclassifying each training example. Large C will choose the a plane that correctly classifies the most training examples. Small C will choose a plane with a larger margin even if that plane wrongly classifies more training examples
-    \item kernel: ['poly', 'rbf', 'sigmoid'] The kernel type to use when mapping the data to a new dimension space
-    \item gamma: float. Kernel coefficient for rbf, poly, and sigmoid. 
-    \item degree: int. Degree of polynomial kernel function. only for 'poly'
+    \item C: [1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03, 1.e+04]
+    \\ Regularization paramenter represents how much I want to avoid misclassifying each training example. Large C will choose the a plane that correctly classifies the most training examples. Small C will choose a plane with a larger margin even if that plane wrongly classifies more training examples
+    \item kernel: ['poly', 'rbf', 'sigmoid'] 
+    \\ The kernel type to use when mapping the data to a new dimension space
+    \item gamma: [1.e-03, 1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03]
+    \\ Kernel coefficient for rbf, poly, and sigmoid.
 \end{itemize}
+
+\nextproblem
+
+\href{https://www.quora.com/What-are-C-and-gamma-with-regards-to-a-support-vector-machine}{1} \\
+\href{https://scikit-learn.org/stable/auto_examples/svm/plot_rbf_parameters.html}{2} \\
+\href{https://machinelearningmastery.com/save-load-machine-learning-models-python-scikit-learn/}{3} \\
+
+
 
 \end{document}
 
