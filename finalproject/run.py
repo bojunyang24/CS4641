@@ -20,6 +20,9 @@ import time
 import sys
 
 def saveprint(s, filename):
+    '''
+    Prints to console but also prints to output file
+    '''
     print(s)
     temp = sys.stdout
     sys.stdout = open("{}_out.txt".format(filename), "a")
@@ -86,7 +89,7 @@ def fit_linear_regression(data, center=True):
 
 def PCA_analysis(data, center=True):
     '''
-    plots 3D plot of data
+    plots 3D PCA'd plot of data
     '''
     label = data.label
     df = data.drop(['label','filename'], axis=1)
@@ -102,8 +105,7 @@ def PCA_analysis(data, center=True):
 
 def plot_3D_proj(data=None,labels=None):
     '''
-    Creates a 3D visualization of the data, returning the created figure. See
-    the main() function for example usage.
+    Creates a 3D visualization of the data
     '''
     fig = matplotlib.pyplot.figure()
     ax = fig.add_subplot(111,projection='3d')
@@ -116,7 +118,7 @@ def plot_3D_proj(data=None,labels=None):
 def gridsearch(classifier, params, x_train, y_train, name="Test_"):
     '''
     Uses GridSearchCV to tune hyperparameters and saves the GridSearchCV results
-    Trains the classifier with the best parameters and scores the model
+    Saves metrics to output file
     '''
     start_time = time.time()
     clf = GridSearchCV(classifier, params, n_jobs=-1, cv=10)
@@ -142,8 +144,11 @@ def gridsearch(classifier, params, x_train, y_train, name="Test_"):
     # best_model.fit(x_train, y_train)
     # print("Test Accuracy: {} Train Accuracy: {}".format(best_model.score(x_test, y_test), best_model.score(x_train, y_train)))
 
-
 def non_linear_svm(data, center=True):
+    '''
+    Uses GridSearchCV to tune hyperparameters for SVM
+    Saves the grid results to a pickle
+    '''
     x_train, x_test, y_train, y_test = preprocess_data(data)
     C = np.logspace(-2, 4, 7)
     gamma = np.logspace(-3, 3, 7)
@@ -155,7 +160,7 @@ def non_linear_svm(data, center=True):
     }
     grid = gridsearch(SVC(), params, x_train, y_train, name="NonLinearSVC0_")
     res = grid.cv_results_
-    clf = grid.best_estimator_
+    clf = OneVsRestClassifier(grid.best_estimator_)
     scores = cross_val_score(clf, x_test, y_test, cv=10)
 
     # 9 degrees of freedome 95% two tailed CI
@@ -213,6 +218,10 @@ def rfc(data, center=True):
     # sys.stdout.close()
 
 def neuralnet(data, center=True):
+    '''
+    First MLP run
+    Saves results using pickle
+    '''
     outfile = "MLP"
     x_train, x_test, y_train, y_test = preprocess_data(data)
     hidden_layer_sizes = [(10,10,10),(20,20,20),(10,10),(20,20)]
@@ -243,7 +252,11 @@ def neuralnet(data, center=True):
     get_ci(scores, outfile)
 
 def neuralnet2(data, center=True):
-    outfile = "MLP"
+    '''
+    Second MLP run
+    Saves results using pickle
+    '''
+    outfile = "MLP_fin"
     x_train, x_test, y_train, y_test = preprocess_data(data)
     hidden_layer_sizes = [(100,100,100)]
     activation =  ['relu']
@@ -283,39 +296,18 @@ def get_ci(scores, outfile):
     saveprint("95% Confidence Interval: [{}, {}]".format(ci[0], ci[1]), outfile)
     # print("95% Confidence Interval: [{}, {}]".format(ci[0], ci[1]))
 
-
-
-data = pd.read_csv('data/data.csv')
-
-# average test and train score for linear svm
-if False:
-    test = 0
-    train = 0
-    size = 100
-    for i in range(size):
-        x_train, x_test, y_train, y_test = preprocess_data(data)
-        _, test_score, train_score = train_linear_svm(x_train, x_test, y_train, y_test,'rbf')
-        test+=test_score
-        train+=train_score
-    print("Avg Test Accuracy: {} Avg Train Accuracy: {}".format(test/size, train/size))
-
-# fit_linear_regression(data)
-
-# PCA_analysis(data)
-
-# neuralnet(data)
-neuralnet2(data)
-
-# rfc(data)
-
-# non_linear_svm(data)
-
 ### Graph code below ###
 
 def rfc_graphs():
+    '''
+    Graphs all graphs for RandomForest run
+    '''
+    outfile = "RandomForest"
     grid0 = pickle.load(open('RandomForest0_GridSearch.sav', 'rb'))
+    saveprint("Best Param 1: {}".format(grid0.best_params_), outfile)
     res0 = grid0.cv_results_
     grid1 = pickle.load(open('RandomForest0_GridSearch.sav', 'rb'))
+    saveprint("Best Param 1: {}".format(grid1.best_params_), outfile)
     res1 = grid1.cv_results_
     x = [param['max_depth'] for param in res0['params']]
     y = res0['mean_test_score']
@@ -324,6 +316,9 @@ def rfc_graphs():
     get_rfc_graphs(x,y, res0['params'], None, 'sqrt', 'log2', "plots/RF_n_estimators", "n_estimators")
 
 def get_rfc_graphs(x, y, params, c1, c2, c3, name, xname, yname='mean_test_score'):
+    '''
+    Graphs a set graphs for RandomForest run
+    '''
     redx = []
     redy = []
     greenx = []
@@ -377,23 +372,38 @@ def get_rfc_graphs(x, y, params, c1, c2, c3, name, xname, yname='mean_test_score
 
     uniquex = np.unique(np.array(x))
 
-    redline = make_line(redx, redy, uniquex)
-    greenline = make_line(greenx, greeny, uniquex)
-    blueline = make_line(bluex, bluey, uniquex)
+    redline, redstds = make_line(redx, redy, uniquex)
+    greenline, greenstds = make_line(greenx, greeny, uniquex)
+    blueline, bluestds = make_line(bluex, bluey, uniquex)
     plt.semilogx(redline[:,0], redline[:,1], label=str(c1), color="red")
+    plt.gca().fill_between(redline[:,0], redline[:,1] - redstds, redline[:,1] + redstds, color="mistyrose")
     plt.semilogx(greenline[:,0], greenline[:,1], label=str(c2), color="green")
+    plt.gca().fill_between(greenline[:,0], greenline[:,1] - greenstds, greenline[:,1] + greenstds, color="palegreen")
     plt.semilogx(blueline[:,0], blueline[:,1], label=str(c3), color="blue")
+    plt.gca().fill_between(blueline[:,0], blueline[:,1] - bluestds, blueline[:,1] + bluestds, color="lightblue")
+
+    # redline = make_line(redx, redy, uniquex)
+    # greenline = make_line(greenx, greeny, uniquex)
+    # blueline = make_line(bluex, bluey, uniquex)
+    # plt.semilogx(redline[:,0], redline[:,1], label=str(c1), color="red")
+    # plt.semilogx(greenline[:,0], greenline[:,1], label=str(c2), color="green")
+    # plt.semilogx(blueline[:,0], blueline[:,1], label=str(c3), color="blue")
     plt.legend()
     plt.xlabel(xname)
     plt.ylabel(yname)
     plt.savefig('{}_line.png'.format(name))
     plt.clf()
 
-
 def svm_graphs():
+    '''
+    Graphs all graphs for SVM run
+    '''
+    outfile = "NonLinearSVC"
     grid0 = pickle.load(open('NonLinearSVC0_GridSearch.sav', 'rb'))
+    saveprint("Best Param 1: {}".format(grid0.best_params_), outfile)
     res0 = grid0.cv_results_
     grid1 = pickle.load(open('NonLinearSVC1_GridSearch.sav', 'rb'))
+    saveprint("Best Param 1: {}".format(grid1.best_params_), outfile)
     res1 = grid1.cv_results_
     x = [param['C'] for param in res0['params']]
     y = res0['mean_test_score']
@@ -402,6 +412,9 @@ def svm_graphs():
     get_svm_graphs(x,y, res0['params'], 'poly', 'rbf', 'sigmoid', "plots/SVM_gamma", "gamma")
 
 def get_svm_graphs(x, y, params, c1, c2, c3, name, xname, yname='mean_test_score'):
+    '''
+    Graphs a set of graphs for SVM run
+    '''
     redx = []
     redy = []
     greenx = []
@@ -467,12 +480,16 @@ def get_svm_graphs(x, y, params, c1, c2, c3, name, xname, yname='mean_test_score
 
     uniquex = np.unique(np.array(x))
 
-    redline = make_line(redx, redy, uniquex)
-    greenline = make_line(greenx, greeny, uniquex)
-    blueline = make_line(bluex, bluey, uniquex)
+    redline, redstds = make_line(redx, redy, uniquex)
+    greenline, greenstds = make_line(greenx, greeny, uniquex)
+    blueline, bluestds = make_line(bluex, bluey, uniquex)
     plt.semilogx(redline[:,0], redline[:,1], label=str(c1), color="red")
+    plt.gca().fill_between(redline[:,0], redline[:,1] - redstds, redline[:,1] + redstds, color="mistyrose")
     plt.semilogx(greenline[:,0], greenline[:,1], label=str(c2), color="green")
+    plt.gca().fill_between(greenline[:,0], greenline[:,1] - greenstds, greenline[:,1] + greenstds, color="palegreen")
     plt.semilogx(blueline[:,0], blueline[:,1], label=str(c3), color="blue")
+    plt.gca().fill_between(blueline[:,0], blueline[:,1] - bluestds, blueline[:,1] + bluestds, color="lightblue")
+
     plt.legend()
     plt.xlabel(xname)
     plt.ylabel(yname)
@@ -480,14 +497,22 @@ def get_svm_graphs(x, y, params, c1, c2, c3, name, xname, yname='mean_test_score
     plt.clf()
 
 def make_line(x,y,xvals):
+    '''
+    Creates x and y series of average score for graph functions
+    '''
     xy = np.concatenate((np.reshape(x, (len(x),1)), np.reshape(y, (len(y),1))), axis=1)
     line = []
+    stds = []
     for gam in xvals:
         targets = np.where(xy[:,0] == gam)
         line.append([gam, np.average(xy[targets,1])])
-    return np.array(line)
+        stds.append(np.std(xy[targets,1]))
+    return np.array(line), np.array(stds)
 
 def nn_graphs():
+    '''
+    Graphs all graphs for first MLP run
+    '''
     grid0 = pickle.load(open('MLP0_GridSearch.sav', 'rb'))
     res0 = grid0.cv_results_
     grid1 = pickle.load(open('MLP1_GridSearch.sav', 'rb'))
@@ -501,6 +526,9 @@ def nn_graphs():
     get_nn_graphs(x,y, res0['params'], 'logistic', 'relu', "plots/MLP_max_iter", "max_iter")
 
 def get_nn_graphs(x, y, params, c1, c2, name, xname, yname='mean_test_score', weirdx=False):
+    '''
+    Graphs a set of graphs for first MLP run
+    '''
     redx = []
     redy = []
     greenx = []
@@ -525,8 +553,8 @@ def get_nn_graphs(x, y, params, c1, c2, name, xname, yname='mean_test_score', we
 
     uniquex = np.unique(np.array(x))
 
-    redline = make_line(redx, redy, uniquex)
-    greenline = make_line(greenx, greeny, uniquex)
+    redline, _ = make_line(redx, redy, uniquex)
+    greenline, _ = make_line(greenx, greeny, uniquex)
     plt.semilogx(redline[:,0], redline[:,1], label=str(c1), color="red")
     plt.semilogx(greenline[:,0], greenline[:,1], label=str(c2), color="green")
     plt.legend()
@@ -536,8 +564,184 @@ def get_nn_graphs(x, y, params, c1, c2, name, xname, yname='mean_test_score', we
     plt.savefig('{}_line.png'.format(name))
     plt.clf()
 
-# rfc_graphs()
+def nn2_graphs():
+    '''
+    Graphs all graphs used for Second MLP run
+    '''
+    grid0 = pickle.load(open('MLP_fin_0GridSearch.sav', 'rb'))
+    res0 = grid0.cv_results_
+    grid1 = pickle.load(open('MLP_fin_1GridSearch.sav', 'rb'))
+    res1 = grid1.cv_results_
+    y = res0['mean_test_score']
+    x = [param['alpha'] for param in res0['params']]
+    get_nn2_graphs(x,y, res0['params'], [0.001, 0.005, 0.01, 0.05, 0.1], "plots/MLP_fin_alpha", "alpha")
+    x = [param['learning_rate_init'] for param in res0['params']]
+    get_nn3_graphs(x,y, res0['params'], [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.1], "plots/MLP_fin_learning_rate_init", "learning_rate_init")
 
-# svm_graphs()
+def get_nn2_graphs(x, y, params, c, name, xname, yname='mean_test_score', weirdx=False):
+    '''
+    Graphs for Second MLP run with alpha on x
+    '''
+    ax = []
+    ay = []
+    bx = []
+    by = []
+    cx = []
+    cy = []
+    dx = []
+    dy = []
+    ex = []
+    ey = []
+    i = 0
+    for param in params:
+        if param['learning_rate_init'] == c[0]:
+            ax.append(x[i])
+            ay.append(y[i])
+        if param['learning_rate_init'] == c[1]:
+            bx.append(x[i])
+            by.append(y[i])
+        if param['learning_rate_init'] == c[2]:
+            cx.append(x[i])
+            cy.append(y[i])
+        if param['learning_rate_init'] == c[3]:
+            dx.append(x[i])
+            dy.append(y[i])
+        if param['learning_rate_init'] == c[4]:
+            ex.append(x[i])
+            ey.append(y[i])
+        i+=1
 
-# nn_graphs()
+    uniquex = np.unique(np.array(x))
+    aline, _ = make_line(ax,ay,uniquex)
+    bline, _ = make_line(bx,by,uniquex)
+    cline, _ = make_line(cx,cy,uniquex)
+    dline, _ = make_line(dx,dy,uniquex)
+    eline, _ = make_line(ex,ey,uniquex)
+    plt.semilogx(aline[:,0], aline[:,1], label=str(c[0]), color="red")
+    plt.semilogx(bline[:,0], bline[:,1], label=str(c[1]), color="green")
+    plt.semilogx(cline[:,0], cline[:,1], label=str(c[2]), color="blue")
+    plt.semilogx(dline[:,0], dline[:,1], label=str(c[3]), color="black")
+    plt.semilogx(eline[:,0], eline[:,1], label=str(c[4]), color="yellow")
+
+    # redline = make_line(redx, redy, uniquex)
+    # greenline = make_line(greenx, greeny, uniquex)
+    # plt.semilogx(redline[:,0], redline[:,1], label=str(c1), color="red")
+    # plt.semilogx(greenline[:,0], greenline[:,1], label=str(c2), color="green")
+    plt.legend(title="learning_rate_init")
+    plt.xlabel(xname)
+    plt.ylabel(yname)
+    # plt.show()
+    plt.savefig('{}_line.png'.format(name))
+    plt.clf()
+
+def get_nn3_graphs(x, y, params, c, name, xname, yname='mean_test_score', weirdx=False):
+    '''
+    Graphs for Second MLP run with learning rate on x
+    '''
+    ax = []
+    ay = []
+    bx = []
+    by = []
+    cx = []
+    cy = []
+    dx = []
+    dy = []
+    ex = []
+    ey = []
+    fx = []
+    fy = []
+    gx = []
+    gy = []
+    i = 0
+    for param in params:
+        if param['alpha'] == c[0]:
+            ax.append(x[i])
+            ay.append(y[i])
+        if param['alpha'] == c[1]:
+            bx.append(x[i])
+            by.append(y[i])
+        if param['alpha'] == c[2]:
+            cx.append(x[i])
+            cy.append(y[i])
+        if param['alpha'] == c[3]:
+            dx.append(x[i])
+            dy.append(y[i])
+        if param['alpha'] == c[4]:
+            ex.append(x[i])
+            ey.append(y[i])
+        if param['alpha'] == c[5]:
+            fx.append(x[i])
+            fy.append(y[i])
+        if param['alpha'] == c[6]:
+            gx.append(x[i])
+            gy.append(y[i])
+        i+=1
+
+    uniquex = np.unique(np.array(x))
+    aline, _ = make_line(ax,ay,uniquex)
+    bline, _ = make_line(bx,by,uniquex)
+    cline, _ = make_line(cx,cy,uniquex)
+    dline, _ = make_line(dx,dy,uniquex)
+    eline, _ = make_line(ex,ey,uniquex)
+    fline, _ = make_line(fx,fy,uniquex)
+    gline, _ = make_line(gx,gy,uniquex)
+    plt.semilogx(aline[:,0], aline[:,1], label=str(c[0]), color="red")
+    plt.semilogx(bline[:,0], bline[:,1], label=str(c[1]), color="green")
+    plt.semilogx(cline[:,0], cline[:,1], label=str(c[2]), color="blue")
+    plt.semilogx(dline[:,0], dline[:,1], label=str(c[3]), color="black")
+    plt.semilogx(eline[:,0], eline[:,1], label=str(c[4]), color="yellow")
+    plt.semilogx(fline[:,0], fline[:,1], label=str(c[5]), color="cyan")
+    plt.semilogx(gline[:,0], gline[:,1], label=str(c[6]), color="magenta")
+
+    # redline = make_line(redx, redy, uniquex)
+    # greenline = make_line(greenx, greeny, uniquex)
+    # plt.semilogx(redline[:,0], redline[:,1], label=str(c1), color="red")
+    # plt.semilogx(greenline[:,0], greenline[:,1], label=str(c2), color="green")
+    plt.legend(title="alpha")
+    plt.xlabel(xname)
+    plt.ylabel(yname)
+    # plt.show()
+    plt.savefig('{}_line.png'.format(name))
+    plt.clf()
+
+
+### Script to get all results
+data = pd.read_csv('data/data.csv')
+
+# average test and train score for linear svm
+if False:
+    test = 0
+    train = 0
+    size = 100
+    for i in range(size):
+        x_train, x_test, y_train, y_test = preprocess_data(data)
+        _, test_score, train_score = train_linear_svm(x_train, x_test, y_train, y_test,'rbf')
+        test+=test_score
+        train+=train_score
+    print("Avg Test Accuracy: {} Avg Train Accuracy: {}".format(test/size, train/size))
+
+# Runs lin reg with one-hot-encoding
+fit_linear_regression(data)
+
+# Gets 3D PCA Analysis Graph
+PCA_analysis(data)
+
+# Hyperparameter Tuning for RandomForest
+rfc(data)
+
+# Hyperparameter Tuning for Non-LinearSVM
+non_linear_svm(data)
+
+# Hyperparameter Tuning For 2 Neural Net Experiemnts. The Fist experiement takes a LONG time
+neuralnet(data)
+neuralnet2(data)
+
+# Outputs graphs used for RandomForest
+rfc_graphs()
+
+# Outputs graphs used for SVM
+svm_graphs()
+
+# Outputs graphs used for NeuralNets
+nn_graphs()
+nn2_graphs()

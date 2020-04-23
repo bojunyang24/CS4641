@@ -2,3 +2,5 @@ GridSearchCV elapsed time: 184.80322098731995
 GridSearchCV elapsed time: 183.94510006904602
 {'n_estimators': [100, 200, 300, 400, 500], 'max_depth': [100, 200, 300, 400, 500], 'max_features': ['sqrt', 'log2', None]}
 95% Confidence Interval: [0.5942999477145694, 0.6077000522854301]
+Best Param 1: {'max_depth': 300, 'max_features': 'sqrt', 'n_estimators': 500}
+Best Param 1: {'max_depth': 300, 'max_features': 'sqrt', 'n_estimators': 500}

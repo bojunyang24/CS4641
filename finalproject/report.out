@@ -1,6 +1,6 @@
 \BOOKMARK [1][-]{section.1}{Introduction to Dataset}{}% 1
 \BOOKMARK [2][-]{subsection.1.1}{Music Features from Kaggle \( link\)}{section.1}% 2
-\BOOKMARK [2][-]{subsection.1.2}{Supervised Learning Problem}{section.1}% 3
+\BOOKMARK [2][-]{subsection.1.2}{Supervised Learning Problem - Triviality Tests}{section.1}% 3
 \BOOKMARK [2][-]{subsection.1.3}{Performance Metrics}{section.1}% 4
 \BOOKMARK [1][-]{section.2}{Description of Algorithms}{}% 5
 \BOOKMARK [2][-]{subsection.2.1}{Random Forests with Bagging}{section.2}% 6
@@ -8,5 +8,10 @@
 \BOOKMARK [2][-]{subsection.2.3}{Neural Network}{section.2}% 8
 \BOOKMARK [1][-]{section.3}{Tuning Hyperparameters}{}% 9
 \BOOKMARK [2][-]{subsection.3.1}{Tuning Random Forests}{section.3}% 10
-\BOOKMARK [2][-]{subsection.3.2}{Tuning Non-Linear SMVs}{section.3}% 11
+\BOOKMARK [2][-]{subsection.3.2}{Tuning Non-Linear SVMs}{section.3}% 11
 \BOOKMARK [2][-]{subsection.3.3}{Tuning Neural Nets}{section.3}% 12
+\BOOKMARK [2][-]{subsection.3.4}{Non-Triviality}{section.3}% 13
+\BOOKMARK [1][-]{section.4}{Comparing Algorithm Performance}{}% 14
+\BOOKMARK [1][-]{section.5}{Conclusion}{}% 15
+\BOOKMARK [2][-]{subsection.5.1}{Further Thoughts}{section.5}% 16
+\BOOKMARK [1][-]{section.6}{Acknowledgements}{}% 17

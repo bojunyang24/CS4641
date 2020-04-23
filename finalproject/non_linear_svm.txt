@@ -1,4 +1,0 @@
-GridSearchCV elapsed time: 6.618080139160156
-GridSearchCV elapsed time: 6.287751197814941
-{'C': array([1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03, 1.e+04]), 'gamma': array([1.e-03, 1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03]), 'kernel': ['poly', 'rbf', 'sigmoid']}
-95% Confidence Interval: [0.6231634035045293, 0.6328365964954707]

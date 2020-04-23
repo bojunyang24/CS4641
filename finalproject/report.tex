@@ -41,7 +41,6 @@
 \subsection{\href{https://www.kaggle.com/insiyeah/musicfeatures}{Music Features from Kaggle} ($\leftarrow$ link)}
 Every year I look forward to Spotify's end of year wrap up. As a consumer of sounds, I love seeing which "conventional categories," AKA genres, of music I sink thousands of hours in. This past year a new one made itself to the top of my list: Cpop. After some research, that stands for Chinese Pop. I've literally never heard of songs being labeled in this kind of genre before which led me to wonder how can someone categorize all the various kinds of music in the world. 
 \\ \\
-\textbf{TODO: Feature description.}
 When I found this dataset, I was already interested in seeing if machine learning could analyze the sound waves of a piece of music and determine it's genre. However, that seems a too big of a computational task so I decided to use the features that are provided by this dataset. This dataset contains \textbf{1,000 datapoints} with \textbf{30 features per datapoint}. To prove that the features describe a piece pretty well, here are some of the features:
 \begin{itemize}
     \item tempo: speed at which a passage of music is played
@@ -49,8 +48,10 @@ When I found this dataset, I was already interested in seeing if machine learnin
     \item chroma\_stft: The Short Time Fourier Transform can be used to determine the sinusoidal frequency and phase content of local sections of a signal as it changes overtime (kind of like those visualizers that jump up and down)
     \item 20 mel-frequency ceptral coefficients that make up a mel-frequency cepstrum: representation of the short term power spectrum of a sound
 \end{itemize}
+The rest of the features are rmse, spectral\_centroid, spectral\_bandwidth, rolloff, zero\_crossing\_rate.
 
-\subsection{Supervised Learning Problem}
+\subsection{Supervised Learning Problem - Triviality Tests}
+\label{trivial}
 The underlying supervised learning problem is to \textbf{classify the genre} of pieces of music using the features of it's waveform. This dataset is \textbf{not trivial}. At first glance, there is no feature that determines the genre of a song trivially. To prove the non-triviality of this dataset, I tried to fit the centered data using sklearn.svm.LinearSVC (with a one-vs-the-rest multiclass scheme) 100 times and averaged the results.
 \begin{itemize}
     \item avg testing accuracy: 0.62
@@ -63,10 +64,10 @@ The training accuracy is not high enough to prove that the dataset is linearly s
     \\ The graph on the right is a zoomed in version of the left graph. It is clear that there are many data points mixed together and the dataset is at least not linearly separable in 3 dimensions.
     \item Linear Regression: I one-hot-encoded the labels and tried to fit a linear regression. The testing and training accuracy was 0.26 and 0.31 respectively. This serves as more evidence that the dataset is non-trivial.
 \end{itemize}
-After these additional experiements, I have convinced myself that my \textbf{dataset is non-trivial}.
+After these additional experiements, I am somewhat confident that my \textbf{dataset is non-trivial}. I will solidify my claim after I train my classifiers in \hyperref[notrivial]{Section 3.4}
 
 \subsection{Performance Metrics}
-I will be scoring each classfier using cross validation on the testing dataset to obtain k independent scores. These scores represent the accuracy at which the classifier sucessfully classified each data point. I will also be further exploring results with a \textbf{confusion matrix} in a later section. I'll be using the cross validated scores to create a confidence interval that will help in comparing the classifiers to each other.
+I will be scoring each classfier using cross validation on the testing dataset to obtain k independent scores. These scores represent the accuracy at which the classifier sucessfully classified each data point. I'll be using the cross validated scores to create a confidence interval that will help in comparing the classifiers to each other.
 
 \section{Description of Algorithms}
 \subsection{Random Forests with Bagging}
@@ -109,6 +110,7 @@ A neural net is basically a bunch of algorithms, designed and modeled loosely li
 \end{itemize}
 
 \section{Tuning Hyperparameters}
+\label{tuning}
 I will be using \textbf{Nested k-Folds Cross Validation} for hyperparameter tuning. In Nested k-Folds Cross Validation, I will split data randomly into two halves, X and Y. Then I will perform k-Folds Cross Validation on X to tune for optimal hyperparameters. I'll be using sklearn's \textbf{GridSearchCV} for hyperparameter tuning. Then I will take the hyper parameters tuned from X and score it using k-folds cross validation on Y. Then I will switch X and Y and repeat the process. I chose k=10 because my data has 10 different labels and this will give me 20 data points to calculate a confidence interval from. Here is a short step by step guide to my process:
 \begin{enumerate}
     \item Split dataset into X and Y
@@ -137,18 +139,33 @@ Let us look at the second batch of graphs where the x-axis is n\_estimators, the
 \includegraphics[width=0.5\textwidth]{RF_n_estimators1.png}
 \includegraphics[width=0.5\textwidth]{RF_n_estimators2.png}
 \includegraphics[width=0.5\textwidth]{RF_n_estimators3.png}
-Looking at these graphs, we see again that the green and blue points out-perform the red points. The blue and green points also seem to be evenly matched as well. The blue point with the best score has around 300 n\_estimators but there seems to be an upward trend in score as n\_estimators increase for blue points. The green point with the highest score has around 500 n\_estimators. The distribution of green points does not have any noticeable trend. \\
-Based on these graphs, there is no clear "best" set of hyperparameters. If we were to choose, we should choose either sqrt or log2 for the max\_features, 300 for max\_depth, and 300 or 500 for n\_estimators. The best set of hyperparameters that GridSearchCV returned was ['max\_depth': 300, 'max\_features': 'sqrt', 'n\_estimators': 500]. This is expected based off of our observations of the distributions of the graphs.
+Looking at these graphs, we see again that the green and blue points out-perform the red points. The blue and green points also seem to be evenly matched as well. The blue point with the best score has around 300 n\_estimators but there seems to be an upward trend in score as n\_estimators increase for blue points. The green point with the highest score has around 500 n\_estimators. The distribution of green points does not have any noticeable trend. To further explore the relationship, I averaged the score at each x-value for the past two sets of graphs and plotted a line graph to show the trend. The shades of color are 1 standard deviation ranges of the mean for that average datapoint: \\
+\includegraphics[width=0.5\textwidth]{RF_max_depth_line.png}
+\includegraphics[width=0.5\textwidth]{RF_n_estimators_line.png}
+\\
+Looking at the new line graphs, it seems that the sqrt (of the number of total features) perfoms the best among the other max\_features options. Based on the graphs I would choose sqrt for the max\_features, 300 for max\_depth, and 500 for n\_estimators. The best set of hyperparameters that GridSearchCV returned was also ['max\_depth': 300, 'max\_features': 'sqrt', 'n\_estimators': 500]. This estimator had an average cross evaluated score on the testing data of around 0.595 for my run.
 
-\subsection{Tuning Non-Linear SMVs}
+\subsection{Tuning Non-Linear SVMs}
 Here is the set of hyperparameters that I tuned for Non-Linear SVMs:
 \begin{itemize}
     \item C: [1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03, 1.e+04]
     \item kernel: ['poly', 'rbf', 'sigmoid'] 
     \item gamma: [1.e-03, 1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03]
 \end{itemize}
-Each GridSearchCV on a split half the size of the data usually took 7 seconds to run. However, sometimes it would take significantly longer to converge. My results took \textbf{14s} to complete.
-
+Each GridSearchCV on a split half the size of the data usually took 7 seconds to run. However, sometimes it would take significantly longer to converge. My results took \textbf{14s} to complete. Here are the graphs of mean\_test\_score versus C and gamma for each kernel: \\
+\includegraphics[width=0.5\textwidth]{SVM_C0.png}
+\includegraphics[width=0.5\textwidth]{SVM_C1.png}
+\includegraphics[width=0.5\textwidth]{SVM_C2.png}
+\includegraphics[width=0.5\textwidth]{SVM_C3.png}
+For the graphs with C on the x-axis, we see that rbf has the best performing individuals but it also has the lowest performing individuals. The individuals in poly seem to score better than the individual of sigmoid. I think it's interesting to note that the highest performing individuals of rbf have C values of 1 or more. This means that the classifier will try to correctly classify as many training examples as possible and be more likely to overfit. However in our case, a larger C value actually produced better results.
+\includegraphics[width=0.5\textwidth]{SVM_gamma0.png}
+\includegraphics[width=0.5\textwidth]{SVM_gamma1.png}
+\includegraphics[width=0.5\textwidth]{SVM_gamma2.png}
+\includegraphics[width=0.5\textwidth]{SVM_gamma3.png}
+We see a bit more pattern for the graphs with gamma on the x-axis. All of rbf's highest scoring individuals have a gamma of 0.1 or lower while poly's highest scoring individuals have a gamma of 0.01 or higher. This is because the kernel coefficient, gamma, has different optimal values for different kernels. \\
+\includegraphics[width=0.5\textwidth]{SVM_C_line.png}
+\includegraphics[width=0.5\textwidth]{SVM_gamma_line.png}
+Looking at the average scores for C and gamma values, we actually see some contradicting results. From the previous graphs, it looked like rbf would be the best choice for highest performing indviduals. In terms of consistency and average scores, though, poly performs a lot better than the other two kernels. Note that the standard deviation for the gamma graph decreases due a smaller number of datapoints, not because of an increase in consistency. Based on the averages, I would choose poly because its average score is better than the other kernels. I would choose C=10000 and gamma = 100. The best estimator from GridSearchCV was rbf simply due to it having the highest scoring individual. 
 \subsection{Tuning Neural Nets}
 Here is the set of hyperparameters that I tuned for MLP:
 \begin{itemize}
@@ -178,14 +195,40 @@ Looking at the MLP\_out.txt, I printed the best params of the two grid searches 
     \item learning\_rate\_init: [0.001, 0.005, 0.01, 0.05, 0.1]
     \item max\_iter: 1500
 \end{itemize}
+This experiment took \textbf{100s}. Here are the resulting graphs. \\
+\includegraphics[width=0.5\textwidth]{MLP_fin_alpha_line.png}
+\includegraphics[width=0.5\textwidth]{MLP_fin_learning_rate_init_line.png}
+From the left graph, we can see that too high of a learning rate is obviously bad. There is not much difference the learning rates less than 0.05 when alpha is varied. From the right graph, we can see again that if learning rate is too big, the score will drop drastically. This is expected as a high learning rate can cause a model to diverge instead of converging. The best individuals from both GridSearchCVs had a learning\_rate\_init of 0.001 and alpha of 0.005. At this point, I manually zoomed into the lines at the top in the left graph. \\ 
+\includegraphics[width=0.75\textwidth]{MLP_fin_alpha_line_zoom.png} \\
+With a closer look, we can tell that for each learning\_rate\_init, there is an optimal alpha associated with it. The hyperparameters I would choose to train for this dataset is relu activation, -0.005 alpha, (100, 100, 100) hidden layers, 0.001 learning rate and 1500 max iterations.
+\subsection{Non-Triviality}
+\label{notrivial}
+In addition to my initial tests (\hyperref[trivial]{Section 1.2}) to determine if my dataset was trivial, the performance and variability that is shown these three classifiers further solidify my claim that my dataset is non-trivial.
 
+\section{Comparing Algorithm Performance}
+The metrics I used to evaluate each classifier was detailed in \hyperref[tuning]{Section 3}. With the 20 cross validated testing scores, I created a 95\% confidence interval for each classifier's performance:
+\begin{itemize}
+    \item RandomForest: [0.5942999477145694, 0.6077000522854301]
+    \item Non-Linear SVM: [0.6097518259758751, 0.6202481740241249]
+    \item MLP Neural Net: [0.607693718679951, 0.618306281320049]
+\end{itemize}
+Based on the confidence intervals, it seems that RandomForest was the worst performing classfier and is barely statistically significant from the other two. SVM had a larger range than the Neural Net but neither were statistically significant from each other. I chose not to look at the confusion matrix due to the nature of the dataset. Since I used one-vs-all classification, the confusion matrix would not tell me the labels that missclassifications chose. Also, since there is no need to prefer false negatives over false positives or vice versa, there is no need to look at a confusion matrix. Based off of performance \textbf{only} I would choose Non-Linear SVM because it has the highest range of confidence interval.
+
+\section{Conclusion}
+To consider all metrics, I would choose the MLP Neural Net to use in real practice because of many factors. It is the most flexible and can handle a greater variety of problems. In my experiements, MLP training and hyperparameter tuning was not the slowest even though it can be a very complex model. It took about 100 seconds to find optimal hyperparameters for learning rate and alpha for neural net. I am not factoring the other hyperparameters because a neural net can solve most problems with just one hidden layer. For RandomForest, it took 4 times as long (400s) to find optimal parameters for a model with less accuracy. I did not choose SVM due to its variablility in tuning time. Sometimes it takes 20 seconds, others it can take hours. I do not completely understand the math behind this phenomenon so I am hesitant to choose SVMs for use in real life. \\ \\
+I also believe the neural net is very fitting for data on this domain because humans are who decides the genre of a piece of music. The model that most closely resembles a human brain is the neural net. However, one down fall of neural nets is that the input data must be pre-processed. I was lucky to find a dataset that was complete. But if we are dealing with sounds, all features of a piece can be calculated with its sound wave, which means you can get the data if you try hard enough. 
+
+\subsection{Further Thoughts}
+I would be very interested in exploring the algorithms of companies like Spotify that can recommend music to users based on their preferences. I'm sure that genre is a feature that is used in their algorithm. 
 
 \nextproblem
 
-\href{https://www.quora.com/What-are-C-and-gamma-with-regards-to-a-support-vector-machine}{1} \\
-\href{https://scikit-learn.org/stable/auto_examples/svm/plot_rbf_parameters.html}{2} \\
-\href{https://machinelearningmastery.com/save-load-machine-learning-models-python-scikit-learn/}{3} \\
+\section{Acknowledgements}
 
+\href{https://www.quora.com/What-are-C-and-gamma-with-regards-to-a-support-vector-machine}{Where I learned what C and Gamma are} \\
+\href{https://scikit-learn.org/stable/index.html}{Sci-kit Learn} \\
+\href{https://machinelearningmastery.com/save-load-machine-learning-models-python-scikit-learn/}{Pickling my Gridsearch Results} \\
+\href{https://matplotlib.org/3.1.1/contents.html}{Matplotlib Docs} \\
 
 
 \end{document}

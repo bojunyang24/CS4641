@@ -4,7 +4,3 @@ GridSearchCV elapsed time: 978.4212872982025
 Best Param 2: {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (200, 200), 'learning_rate_init': 0.001, 'max_iter': 3000}
 {'hidden_layer_sizes': [(100, 100, 100), (200, 200, 200), (100, 100), (200, 200)], 'activation': ['logistic', 'relu'], 'alpha': [0.0001, 0.001], 'learning_rate_init': [0.01, 0.001], 'max_iter': [2000, 3000]}
 95% Confidence Interval: [0.6149053783039543, 0.6290946216960455]
-Best Param 1: {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (100, 100, 100), 'learning_rate_init': 0.001, 'max_iter': 1500}
-Best Param 2: {'activation': 'relu', 'alpha': 0.0005, 'hidden_layer_sizes': (100, 100, 100), 'learning_rate_init': 0.001, 'max_iter': 1500}
-{'hidden_layer_sizes': [(100, 100, 100)], 'activation': ['relu'], 'alpha': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05], 'learning_rate_init': [0.001, 0.005, 0.01, 0.05, 0.1], 'max_iter': [1500]}
-95% Confidence Interval: [0.607693718679951, 0.618306281320049]
