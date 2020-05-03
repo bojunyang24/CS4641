@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1587606573 "/Users/bojunyang/school/CS4641/finalproject/report.tex" "/Users/bojunyang/school/CS4641/finalproject/report.pdf" "report" 1587606575
+["pdflatex"] 1587606573 "/Users/bojunyang/school/CS4641/finalproject/report.tex" "/Users/bojunyang/school/CS4641/finalproject/report.pdf" "report" 1587613626
   "/Users/bojunyang/school/CS4641/finalproject/report.aux" 1587606575 3162 ae625b68ae00d1c0b7b3bcbbe759f304 ""
   "/Users/bojunyang/school/CS4641/finalproject/report.tex" 1587606574 23538 5795b46c8f76a67de6041a4b10ff6b68 ""
   "/usr/local/texlive/2019/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
@@ -101,9 +101,9 @@
   "report.out" 1587606575 1165 e35df4126687ea8650c5b0a4ccc13f0d "pdflatex"
   "report.tex" 1587606574 23538 5795b46c8f76a67de6041a4b10ff6b68 ""
   (generated)
-  "report.out"
-  "report.aux"
   "/Users/bojunyang/school/CS4641/finalproject/report.pdf"
-  "report.log"
-  "/Users/bojunyang/school/CS4641/finalproject/report.log"
+  "report.out"
   "report.pdf"
+  "report.log"
+  "report.aux"
+  "/Users/bojunyang/school/CS4641/finalproject/report.log"
